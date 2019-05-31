@@ -89,7 +89,7 @@ value
 
 
 ifThenStatement
-	:	'#if' '(' expression ')' statement ('#elseif' statement)*('#else' statement)? '#endif'
+	:	'#if' '(' expression ')' statement ('#elseif' '(' expression ')' statement)*('#else' statement)? '#endif'
 	;
 forStatement
     :'#for' '('  (index ',')?item 'in'  parameter  forParameter*?  ')' statement '#endfor'
