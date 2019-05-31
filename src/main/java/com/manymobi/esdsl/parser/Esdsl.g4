@@ -8,21 +8,22 @@ json
    ;
 
 obj
-   : '{' statement (','? statement)* '}'
+   : '{' statement (',' statement)* '}'
    | '{' '}'
    ;
 
 pair
-   : value ':' statement
+   : STRING ':' statement
    ;
 
 array
-   : '[' statement (','? statement)* ']'
+   : '[' statement ((',' value)|statement)* ']'
    | '[' ']'
    ;
 
 value
    : STRING
+   | PARAMETER
    | NUMBER
    | obj
    | array
@@ -31,11 +32,12 @@ value
    | 'null'
    ;
 
+
 ifThenStatement
 	:	'#if' '(' expression ')' statement ('#elseif' statement)*('#else' statement)? '#endif'
 	;
 forStatement
-    :'#for' '('  (STRING1 ',')?STRING1 'in'  STRING   forParameter*?  ')' statement '#endfor'
+    :'#for' '('  (STRING1 ',')?STRING1 'in'  PARAMETER  forParameter*?  ')' statement '#endfor'
     ;
 forParameter
    : 'open''='symbol_tring
@@ -56,10 +58,10 @@ SYMBOL
     ;
 
 statement
-    :','?pair(','pair)?','?
-    |value
-    |ifThenStatement
-    |forStatement
+    :pair(','pair)* ','?
+    |value ','?
+    |ifThenStatement ','?
+    |forStatement ','?
     ;
 //ifThenElseStatement
 //	:	'#if' '(' expression ')' statementNoShortIf 'else' statement
@@ -95,24 +97,27 @@ wrong
     :'!'
     |'~'
     ;
-STRING
-   : '"' (ESC | SAFECODEPOINT)* '"'
-   |'#{' (ESC | SAFECODEPOINT)* '}'
-   |'${' (ESC | SAFECODEPOINT)* '}'
-   |'null'
-   ;
 //// 变量
 //fragment VARIABLE/*变量*/
 //    :
 //    ;
-//
+////
 STRING1
-   : ([a-zA-Z~0-9_]) ([a-zA-Z~0-9_])*
+   : ([a-zA-Z_]) ([a-zA-Z~0-9_])*
    ;
 
 
+STRING
+   : '"' (ESC | SAFECODEPOINT)* '"'
+   |'null'
+   ;
+PARAMETER
+  :'#{' (ESC | SAFECODEPOINT)* '}'
+  |'${' (ESC | SAFECODEPOINT)* '}'
+  ;
+
 fragment ESC
-   : '\\' (["\\/bfnrt] | UNICODE)
+   : '\\' ([}"\\/bfnrt] | UNICODE)
    ;
 fragment UNICODE
    : 'u' HEX HEX HEX HEX
@@ -121,7 +126,7 @@ fragment HEX
    : [0-9a-fA-F]
    ;
 fragment SAFECODEPOINT
-   : ~ ["\\\u0000-\u001F]
+   : ~ [}"\\\u0000-\u001F]
    ;
 
 
@@ -139,6 +144,8 @@ fragment INT
 fragment EXP
    : [Ee] [+\-]? INT
    ;
+
+// \- since - means "range" inside [...]
 
 WS
    : [ \t\n\r] + -> skip
