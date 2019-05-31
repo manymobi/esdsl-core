@@ -3,12 +3,67 @@
 // Derived from http://json.org
 grammar Esdsl;
 
+
+esdslarray
+    : esdsl*
+    ;
+
+esdsl
+   :  methodName LINE_SKIPPING? request? json? (LINE_SKIPPING)?
+   ;
+
+
+methodName
+    :'==> ' (string )*
+    ;
+
+request
+    : REQUEST_METHOD uri
+    ;
+
+
+REQUEST_METHOD
+   : 'GET'
+   | 'POST'
+   | 'PUT'
+   | 'DELETE'
+   ;
+
+
+
+uri
+   : ('/' path)? query? WS?
+   ;
+
+
+path
+   : string? ('/' string?)*
+   ;
+
+query
+   : '?' search
+   ;
+
+search
+   : searchparameter? ('&' searchparameter?)*
+   ;
+
+searchparameter
+   : string ('=' (string | NUMBER ))?
+   ;
+
+string
+   :STRING1
+   |parameter
+   ;
+
+
 json
    : value
    ;
 
 obj
-   : '{' statement (',' statement)* '}'
+   : '{' statement (','? statement)* '}'
    | '{' '}'
    ;
 
@@ -63,13 +118,7 @@ statement
     |ifThenStatement ','?
     |forStatement ','?
     ;
-//ifThenElseStatement
-//	:	'#if' '(' expression ')' statementNoShortIf 'else' statement
-//	;
-//
-//ifThenElseStatementNoShortIf
-//	:	'if' '(' expression ')' statementNoShortIf 'else' statementNoShortIf
-//	;
+
 expression
     :singleIfcondition  (AND_OR_XOR  singleIfcondition)*?
     ;
@@ -98,10 +147,10 @@ wrong
     |'~'
     ;
 
- index
+index
     :STRING1
     ;
- item
+item
     :STRING1
     ;
 
@@ -120,6 +169,7 @@ parameter
 PARAMETER
   :'#{' (ESC | SAFECODEPOINT)* '}'
   |'${' (ESC | SAFECODEPOINT)* '}'
+  |'@{' (ESC | SAFECODEPOINT)* '}'
   ;
 
 fragment ESC
@@ -153,6 +203,12 @@ fragment EXP
 
 // \- since - means "range" inside [...]
 
+LINE_SKIPPING
+    :'\n' -> skip
+    ;
+
 WS
    : [ \t\n\r] + -> skip
    ;
+COMMENT:            '/*' .*? '*/'    -> skip;
+LINE_COMMENT:       '//' ~[\r\n]*    -> skip;
