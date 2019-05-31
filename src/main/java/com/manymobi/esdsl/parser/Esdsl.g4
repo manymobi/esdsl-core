@@ -23,7 +23,7 @@ array
 
 value
    : STRING
-   | PARAMETER
+   | parameter
    | NUMBER
    | obj
    | array
@@ -37,7 +37,7 @@ ifThenStatement
 	:	'#if' '(' expression ')' statement ('#elseif' statement)*('#else' statement)? '#endif'
 	;
 forStatement
-    :'#for' '('  (STRING1 ',')?STRING1 'in'  PARAMETER  forParameter*?  ')' statement '#endfor'
+    :'#for' '('  (index ',')?item 'in'  parameter  forParameter*?  ')' statement '#endfor'
     ;
 forParameter
    : 'open''='symbol_tring
@@ -97,11 +97,14 @@ wrong
     :'!'
     |'~'
     ;
-//// 变量
-//fragment VARIABLE/*变量*/
-//    :
-//    ;
-////
+
+ index
+    :STRING1
+    ;
+ item
+    :STRING1
+    ;
+
 STRING1
    : ([a-zA-Z_]) ([a-zA-Z~0-9_])*
    ;
@@ -111,6 +114,9 @@ STRING
    : '"' (ESC | SAFECODEPOINT)* '"'
    |'null'
    ;
+parameter
+    :PARAMETER
+    ;
 PARAMETER
   :'#{' (ESC | SAFECODEPOINT)* '}'
   |'${' (ESC | SAFECODEPOINT)* '}'
