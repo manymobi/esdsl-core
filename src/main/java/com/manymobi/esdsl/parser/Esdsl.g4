@@ -14,7 +14,7 @@ esdsl
 
 
 methodName
-    :'==> ' (string )*
+    :'==> ' STRING1
     ;
 
 request
@@ -95,11 +95,11 @@ forStatement
     :'#for' '('  (index ',')?item 'in'  parameter  forParameter*?  ')' statement '#endfor'
     ;
 forParameter
-   : 'open''='symbol_tring
-   | 'close''=' symbol_tring
-   | 'separator''=' symbol_tring
+   : 'open''='symbolTring
+   | 'close''=' symbolTring
+   | 'separator''=' symbolTring
    ;
-symbol_tring/*符号*/
+symbolTring/*符号*/
     :SYMBOL*?
     |'\''STRING'\''
     ;

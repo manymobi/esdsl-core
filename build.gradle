@@ -13,4 +13,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'org.antlr:antlr4-runtime:4.7.2'
+    implementation ('org.slf4j:slf4j-api:1.7.25')
+    implementation('com.alibaba:fastjson:1.2.51')
 }
