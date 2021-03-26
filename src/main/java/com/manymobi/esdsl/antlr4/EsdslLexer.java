@@ -1,13 +1,11 @@
-// Generated from C:/JavaDevelopment/esdsl-core/src/main/java/com/manymobi/esdsl/parser\Esdsl.g4 by ANTLR 4.7.2
-package com.manymobi.esdsl.parser;
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
+// Generated from D:/java/esdsl-core/src/main/java/com/manymobi/esdsl/antlr4\Esdsl.g4 by ANTLR 4.7.2
+package com.manymobi.esdsl.antlr4;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.*;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.LexerATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class EsdslLexer extends Lexer {

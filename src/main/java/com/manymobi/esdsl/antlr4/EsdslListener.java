@@ -1,5 +1,5 @@
-// Generated from C:/JavaDevelopment/esdsl-core/src/main/java/com/manymobi/esdsl/parser\Esdsl.g4 by ANTLR 4.7.2
-package com.manymobi.esdsl.parser;
+// Generated from D:/java/esdsl-core/src/main/java/com/manymobi/esdsl/antlr4\Esdsl.g4 by ANTLR 4.7.2
+package com.manymobi.esdsl.antlr4;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
