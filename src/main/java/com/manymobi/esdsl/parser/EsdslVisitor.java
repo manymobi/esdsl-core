@@ -1,5 +1,7 @@
 package com.manymobi.esdsl.parser;
 
+import com.manymobi.esdsl.antlr4.EsdslBaseVisitor;
+import com.manymobi.esdsl.antlr4.EsdslParser;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
@@ -9,7 +11,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
  * @version 1.0
  * @since 1.0
  */
-public class SEsdslBaseVisitor extends EsdslBaseVisitor {
+public class EsdslVisitor extends EsdslBaseVisitor {
 
     @Override
     public Object visitEsdslarray(EsdslParser.EsdslarrayContext ctx) {
@@ -17,7 +19,7 @@ public class SEsdslBaseVisitor extends EsdslBaseVisitor {
         for (EsdslParser.EsdslContext esdslContext : ctx.esdsl()) {
             visit(esdslContext);
         }
-        return null;
+        return "0";
     }
 
     @Override
@@ -38,6 +40,7 @@ public class SEsdslBaseVisitor extends EsdslBaseVisitor {
 
     @Override
     public Object visitMethodName(EsdslParser.MethodNameContext ctx) {
+
         System.out.println("visitMethodName");
         return ctx.STRING1().getText();
     }

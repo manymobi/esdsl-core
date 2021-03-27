@@ -1,6 +1,5 @@
 package com.manymobi.esdsl.parser.run.process;
 
-import com.alibaba.fastjson.JSON;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
@@ -22,7 +21,10 @@ public abstract class AbstractRunProcess implements RunProcess {
         this.child = child;
     }
 
-    protected Object getVariable/*变量*/(Map<String, Object> parameter, String key) {
+    /**
+     * 变量
+     */
+    protected static Object getVariable(Map<String, Object> parameter, String key) {
 
         if (key == null) {
             return null;
@@ -40,7 +42,7 @@ public abstract class AbstractRunProcess implements RunProcess {
                     Method method = temp.getClass().getMethod("get" + titleCase);
                     temp = method.invoke(temp);
                 } catch (Exception e) {
-                    throw new IllegalParameterException("获取参数失败,参数 " + JSON.toJSONString(parameter) + " key " + key, e);
+                    throw new IllegalParameterException("获取参数失败,参数 " + parameter.toString() + " key " + key, e);
                 }
             }
         }

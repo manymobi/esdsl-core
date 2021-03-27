@@ -1,6 +1,5 @@
 package com.manymobi.esdsl.parser.run.process;
 
-import org.springframework.lang.Nullable;
 
 import java.util.Map;
 
@@ -15,7 +14,6 @@ public interface RunProcess {
     /**
      * @param parameter 参数
      */
-    @Nullable
     String runProcess(Map<String, Object> parameter) throws IllegalParameterException;
 
 }
