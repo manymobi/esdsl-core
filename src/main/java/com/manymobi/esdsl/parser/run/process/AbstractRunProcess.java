@@ -29,7 +29,7 @@ public abstract class AbstractRunProcess implements RunProcess {
      */
     protected static Object getVariable(Map<String, Object> parameter, String key) {
 
-        // TODO: 梁建军 2021/4/12  这个方法要重写 
+        // TODO: 梁建军 2021/4/12  这个方法要重写
         if (key == null) {
             return null;
         }
