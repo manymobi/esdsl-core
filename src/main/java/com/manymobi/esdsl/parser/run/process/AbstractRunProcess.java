@@ -12,6 +12,7 @@ import java.util.Map;
  * 创建时间： 14:45
  * @version 1.0
  * @since 1.0
+ * 抽象处理
  */
 public abstract class AbstractRunProcess implements RunProcess {
 
@@ -52,7 +53,7 @@ public abstract class AbstractRunProcess implements RunProcess {
 
     public abstract static class Build<T extends AbstractRunProcess> {
 
-        protected List<RunProcess> child = new LinkedList<>();
+        protected LinkedList<RunProcess> child = new LinkedList<>();
 
         public void addRunProcess(RunProcess runProcess) {
             child.add(runProcess);
