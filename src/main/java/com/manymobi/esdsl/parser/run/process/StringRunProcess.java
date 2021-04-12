@@ -9,10 +9,13 @@ import java.util.Map;
  * 创建时间： 14:45
  * @version 1.0
  * @since 1.0
+ * 字符串运行处理
  */
 public class StringRunProcess extends AbstractRunProcess {
-
-    private String content;
+    /**
+     * 内容
+     */
+    private final String content;
 
     protected StringRunProcess(List<RunProcess> child, String content) {
         super(child);
@@ -32,9 +35,15 @@ public class StringRunProcess extends AbstractRunProcess {
 
         StringBuilder stringBuilder = new StringBuilder();
 
-
-        public void addString(String s) {
+        /**
+         * 添加字符
+         *
+         * @param s 字符内容
+         * @return 当前
+         */
+        public Build addString(String s) {
             stringBuilder.append(s);
+            return this;
         }
 
         @Override
@@ -52,7 +61,7 @@ public class StringRunProcess extends AbstractRunProcess {
 
         @Override
         public StringRunProcess build() {
-            return new StringRunProcess(child,stringBuilder.toString());
+            return new StringRunProcess(child, stringBuilder.toString());
         }
     }
 }
