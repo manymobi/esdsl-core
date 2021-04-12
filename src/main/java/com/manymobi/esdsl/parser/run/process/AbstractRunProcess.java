@@ -15,8 +15,10 @@ import java.util.Map;
  * 抽象处理
  */
 public abstract class AbstractRunProcess implements RunProcess {
-
-    protected List<RunProcess> child;
+    /**
+     * 处理器列表
+     */
+    protected final List<RunProcess> child;
 
     protected AbstractRunProcess(List<RunProcess> child) {
         this.child = child;
@@ -27,6 +29,7 @@ public abstract class AbstractRunProcess implements RunProcess {
      */
     protected static Object getVariable(Map<String, Object> parameter, String key) {
 
+        // TODO: 梁建军 2021/4/12  这个方法要重写 
         if (key == null) {
             return null;
         }
