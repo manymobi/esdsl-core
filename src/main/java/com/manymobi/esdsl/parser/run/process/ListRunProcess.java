@@ -39,10 +39,20 @@ public class ListRunProcess extends AbstractRunProcess {
                 RunProcess last = child.getLast();
                 if (last instanceof StringRunProcess) {
                     StringRunProcess.Build build = new StringRunProcess.Build();
-                    build.addString( ((StringRunProcess) last).getContent());
+                    build.addString(((StringRunProcess) last).getContent());
                     build.addString(((StringRunProcess) runProcess).getContent());
                     runProcess = build.build();
+                    child.removeLast();
                 }
+            }
+
+            // List添加到List 里面的时候将添加进来的拆解合并进来，较少层数
+            if (runProcess instanceof ListRunProcess) {
+
+                for (RunProcess process : ((ListRunProcess) runProcess).child) {
+                    this.addRunProcess(process);
+                }
+                return;
             }
             super.addRunProcess(runProcess);
         }
