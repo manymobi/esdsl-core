@@ -3,14 +3,12 @@ package com.manymobi.esdsl.parser;
 import com.manymobi.esdsl.RequestMethod;
 import com.manymobi.esdsl.antlr4.EsdslBaseVisitor;
 import com.manymobi.esdsl.antlr4.EsdslParser;
-import com.manymobi.esdsl.parser.run.process.ListRunProcess;
-import com.manymobi.esdsl.parser.run.process.RunProcess;
-import com.manymobi.esdsl.parser.run.process.StringRunProcess;
-import com.manymobi.esdsl.parser.run.process.VariableRunProcess;
+import com.manymobi.esdsl.parser.run.process.*;
 import com.manymobi.esdsl.util.Optional;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -46,12 +44,15 @@ public class EsdslVisitor extends EsdslBaseVisitor {
 
     @Override
     public Object visitMethodName(EsdslParser.MethodNameContext ctx) {
-        return ctx.STRING1().getText();
+        return ctx.STRING1()
+                .getText();
     }
 
     @Override
     public Object visitRequest(EsdslParser.RequestContext ctx) {
-        RequestMethod requestMethod = RequestMethod.valueOf(ctx.REQUEST_METHOD().getText());
+        RequestMethod requestMethod = RequestMethod.valueOf(ctx
+                .REQUEST_METHOD()
+                .getText());
 
         RunProcess url = (RunProcess) visit(ctx.uri());
 
@@ -146,7 +147,9 @@ public class EsdslVisitor extends EsdslBaseVisitor {
     public Object visitString(EsdslParser.StringContext ctx) {
         TerminalNode terminalNode = ctx.STRING1();
         if (terminalNode != null) {
-            return new StringRunProcess.Build().addString(terminalNode.getText()).build();
+            return new StringRunProcess.Build()
+                    .addString(terminalNode.getText())
+                    .build();
         }
         EsdslParser.ParameterContext parameter = ctx.parameter();
         return visit(parameter);
@@ -175,14 +178,24 @@ public class EsdslVisitor extends EsdslBaseVisitor {
 
     @Override
     public Object visitPair(EsdslParser.PairContext ctx) {
-        System.out.println("visitPair");
-        return null;
+        ListRunProcess.Build build = new ListRunProcess.Build();
+        build.addRunProcess(
+                new StringRunProcess.Build()
+                        .addString(ctx.STRING().getText())
+                        .addString(":")
+                        .build()
+        );
+        build.addRunProcess((RunProcess) visit(ctx.statement()));
+        return build.build();
     }
 
     @Override
     public Object visitArray(EsdslParser.ArrayContext ctx) {
-        System.out.println("visitArray");
-        return null;
+        ListRunProcess.Build build = new ListRunProcess.Build();
+        for (ParseTree child : ctx.children) {
+            build.addRunProcess((RunProcess) visit(child));
+        }
+        return build.build();
     }
 
     @Override
@@ -210,8 +223,22 @@ public class EsdslVisitor extends EsdslBaseVisitor {
 
     @Override
     public Object visitIfThenStatement(EsdslParser.IfThenStatementContext ctx) {
-        System.out.println("visitIfThenStatement");
-        return null;
+        IfRunProcess.Build build = new IfRunProcess.Build();
+        List<EsdslParser.ExpressionContext> expression = ctx.expression();
+        List<EsdslParser.StatementContext> statement = ctx.statement();
+        int i = 0;
+        for (; i < expression.size(); i++) {
+            IfRunProcess.If.Build build1 = new IfRunProcess.If.Build();
+            build1.setExpression((ExpressionRunProcess) visit(expression.get(i)));
+            build1.setStatement((RunProcess) visit(statement.get(i)));
+
+            build.addIfOrElseIf(build1.build());
+        }
+
+        if (statement.size() > i) {
+            build.setElse((RunProcess) visit(statement.get(i)));
+        }
+        return build.build();
     }
 
     @Override
@@ -234,31 +261,68 @@ public class EsdslVisitor extends EsdslBaseVisitor {
 
     @Override
     public Object visitStatement(EsdslParser.StatementContext ctx) {
-        System.out.println("visitStatement");
-        return null;
+        return Optional
+                .<ParseTree>ofNullable(ctx.value())
+                .or(() -> Optional.ofNullable(ctx.forStatement()))
+                .or(() -> Optional.ofNullable(ctx.ifThenStatement()))
+                .or(() -> Optional.ofNullable(ctx.forStatement()))
+                .map(this::visit)
+                .map(o -> (RunProcess) o)
+                .map(runProcess -> {
+                    ListRunProcess.Build listRunProcess = new ListRunProcess.Build();
+                    listRunProcess.addRunProcess(runProcess);
+                    listRunProcess.addRunProcess(new StringRunProcess(","));
+                    return listRunProcess.build();
+                })
+                .orElseGet(() -> {
+                    ListRunProcess.Build listRunProcess = new ListRunProcess.Build();
+                    ctx.pair().stream()
+                            .map(this::visit)
+                            .map(o -> (RunProcess) o)
+                            .forEach(runProcess -> {
+                                listRunProcess.addRunProcess(runProcess);
+                                listRunProcess.addRunProcess(new StringRunProcess(","));
+                            });
+                    return listRunProcess.build();
+                });
     }
 
     @Override
     public Object visitExpression(EsdslParser.ExpressionContext ctx) {
-        System.out.println("visitExpression");
-        return null;
+        ExpressionRunProcess.Build build = new ExpressionRunProcess.Build();
+        List<EsdslParser.SingleIfconditionContext> singleIfconditionContexts = ctx.singleIfcondition();
+
+        for (EsdslParser.SingleIfconditionContext context : singleIfconditionContexts) {
+            ExpressionRunProcess.SingleIfCondition o = (ExpressionRunProcess.SingleIfCondition) visit(context);
+            build.addIfCondition(o);
+        }
+
+        List<TerminalNode> terminalNodes = ctx.AND_OR_XOR();
+        for (TerminalNode terminalNode : terminalNodes) {
+            build.addAndOrXor(AndOrXor.get(terminalNode.getText()));
+        }
+        return build.build();
     }
 
     @Override
     public Object visitSingleIfcondition(EsdslParser.SingleIfconditionContext ctx) {
-        System.out.println("visitSingleIfcondition");
-        return null;
+
+        return new ExpressionRunProcess.SingleIfCondition(
+                ctx.wrong() != null,
+                (RunProcess) visit(ctx.value(0)),
+                (String) visit(ctx.logicCharacter()),
+                (RunProcess) visit(ctx.value(1))
+        );
     }
 
     @Override
     public Object visitLogicCharacter(EsdslParser.LogicCharacterContext ctx) {
-        System.out.println("visitLogicCharacter");
-        return null;
+        return ctx.getText();
     }
 
     @Override
     public Object visitWrong(EsdslParser.WrongContext ctx) {
-        System.out.println("visitWrong");
+        //空的，没错
         return null;
     }
 
@@ -281,7 +345,9 @@ public class EsdslVisitor extends EsdslBaseVisitor {
 
     @Override
     public Object visitParameter(EsdslParser.ParameterContext ctx) {
-        String text = ctx.PARAMETER().getText();
+        String text = ctx
+                .PARAMETER()
+                .getText();
         return new VariableRunProcess.Build(VariableRunProcess.Type.get(text.substring(0, 1)),
                 text.substring(2, text.length() - 1))
                 .build();
