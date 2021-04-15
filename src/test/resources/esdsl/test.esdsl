@@ -2,11 +2,11 @@
 GET /index/${fulltext}/_search
 {
   "query" : {
-  #if(232=="rwerwe")
+	#if(232=="rwerwe")
     "match" : {
       "id" :123133131223123212313131
       }
-    #endif
+	#endif
   },
    "highlight" : {
         "pre_tags" : ["<tag1>", "<tag2>"],
@@ -17,12 +17,15 @@ GET /index/${fulltext}/_search
     }
 }
 
+/**
+ * 注解
+ */
 ==> search1
 GET /index/fulltext/_search
 {
   "query" : {
     "match" : {
-      "id" :#{sssss}
+      "id" :#{sssss}   // 注解
       }
   },
    "highlight" : {
