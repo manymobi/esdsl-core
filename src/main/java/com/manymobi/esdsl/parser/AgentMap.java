@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class AgentMap<K, V> extends HashMap<K, V> {
 
-    private Map<K, V> kvMap;
+    private final Map<K, V> kvMap;
 
     public AgentMap(Map<K, V> kvMap) {
         this.kvMap = kvMap;
