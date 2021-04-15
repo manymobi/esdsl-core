@@ -1,5 +1,6 @@
 package com.manymobi.esdsl.parser.run.process;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +18,13 @@ public class StringRunProcess extends AbstractRunProcess {
      */
     private final String content;
 
-    protected StringRunProcess(List<RunProcess> child, String content) {
+    public StringRunProcess(List<RunProcess> child, String content) {
         super(child);
+        this.content = content;
+    }
+
+    public StringRunProcess(String content) {
+        super(Collections.emptyList());
         this.content = content;
     }
 
@@ -48,15 +54,7 @@ public class StringRunProcess extends AbstractRunProcess {
 
         @Override
         public void addRunProcess(RunProcess runProcess) {
-            if (runProcess instanceof StringRunProcess) {
-                addString(((StringRunProcess) runProcess).getContent());
-                for (RunProcess process : ((StringRunProcess) runProcess).child) {
-                    addRunProcess(process);
-                }
-
-            } else {
-                super.addRunProcess(runProcess);
-            }
+            throw new RuntimeException("不支持");
         }
 
         @Override
