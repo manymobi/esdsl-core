@@ -27,7 +27,7 @@ public class VariableRunProcess extends AbstractRunProcess {
     private final Type type;
 
     protected VariableRunProcess(List<RunProcess> child, Build build) {
-        super(child);
+        super(child.toArray(new RunProcess[0]));
         variableName = build.variableName;
         type = build.type;
     }

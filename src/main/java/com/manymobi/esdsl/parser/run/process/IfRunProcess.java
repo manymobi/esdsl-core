@@ -12,20 +12,17 @@ import java.util.*;
  */
 public class IfRunProcess extends AbstractRunProcess {
 
-    private final IfRunProcess.If[] ifRunProcesses;
 
     private final RunProcess elseRunProcess;
 
     protected IfRunProcess(IfRunProcess.Build build) {
-        super(null);
-        ifRunProcesses = build.ifRunProcesses.toArray(new IfRunProcess.If[0]);
+        super(build.ifRunProcesses.toArray(new RunProcess[0]));
         elseRunProcess = build.elseRunProcess;
     }
 
     @Override
     public String runProcess(Map<String, Object> parameter) throws IllegalParameterException {
-
-        for (RunProcess ifRunProcess : ifRunProcesses) {
+        for (RunProcess ifRunProcess : child) {
             String s = ifRunProcess.runProcess(parameter);
             if (s != null) {
                 return s;

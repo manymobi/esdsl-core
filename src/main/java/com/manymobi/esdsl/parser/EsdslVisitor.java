@@ -33,12 +33,6 @@ public class EsdslVisitor extends EsdslBaseVisitor {
         String methodName = (String) visit(ctx.methodName());
         RequestBean requestBean = (RequestBean) visit(ctx.request());
         RunProcess json = (RunProcess) visit(ctx.json());
-
-        System.out.println("");
-        System.out.println("=================================================");
-        System.out.println("methodName=" + methodName);
-        System.out.println("=================================================");
-        System.out.println("");
         return new EsdslBean(methodName, requestBean.requestMethod, requestBean.url, json);
     }
 
@@ -243,20 +237,47 @@ public class EsdslVisitor extends EsdslBaseVisitor {
 
     @Override
     public Object visitForStatement(EsdslParser.ForStatementContext ctx) {
-        System.out.println("visitForStatement");
-        return null;
+        ForRunProcess.Build build = new ForRunProcess.Build();
+
+        build.setIndexName(Optional.ofNullable(ctx.index())
+                .map(this::visit)
+                .map(o -> (String) o)
+                .orElse(null));
+        build.setItemName((String) visit(ctx.item()));
+        String parameter = ctx.parameter().getText();
+        build.setParameter(VariableRunProcess.Type.get(parameter.substring(0, 1)),
+                parameter.substring(2, parameter.length() - 1));
+
+        build.addRunProcess((RunProcess) visit(ctx.statement()));
+
+        for (EsdslParser.ForParameterContext forParameterContext : ctx.forParameter()) {
+
+            switch (forParameterContext.children.get(0).getText()) {
+                case "open":
+                    build.setOpen(false, forParameterContext.children.get(2).getText());
+                    break;
+                case "close":
+                    build.setClose(false, forParameterContext.children.get(2).getText());
+                    break;
+                case "separator":
+                    build.setSeparator(false, forParameterContext.children.get(2).getText());
+                    break;
+                default:
+                    throw new RuntimeException("不该走到这个里");
+            }
+        }
+        return build.build();
     }
 
     @Override
     public Object visitForParameter(EsdslParser.ForParameterContext ctx) {
-        System.out.println("visitForParameter");
+        //空的，没错
         return null;
     }
 
     @Override
     public Object visitSymbolTring(EsdslParser.SymbolTringContext ctx) {
-        System.out.println("visitSymbolTring");
-        return null;
+        return ctx.getText();
     }
 
     @Override
@@ -328,14 +349,12 @@ public class EsdslVisitor extends EsdslBaseVisitor {
 
     @Override
     public Object visitIndex(EsdslParser.IndexContext ctx) {
-        System.out.println("visitIndex");
-        return null;
+        return ctx.getText();
     }
 
     @Override
     public Object visitItem(EsdslParser.ItemContext ctx) {
-        System.out.println("visitItem");
-        return null;
+        return ctx.getText();
     }
 
     @Override

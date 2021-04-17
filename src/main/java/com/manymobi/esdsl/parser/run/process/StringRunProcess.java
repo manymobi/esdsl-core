@@ -19,12 +19,12 @@ public class StringRunProcess extends AbstractRunProcess {
     private final String content;
 
     public StringRunProcess(List<RunProcess> child, String content) {
-        super(child);
+        super(child.toArray(new RunProcess[0]));
         this.content = content;
     }
 
     public StringRunProcess(String content) {
-        super(Collections.emptyList());
+        super(new RunProcess[0]);
         this.content = content;
     }
 

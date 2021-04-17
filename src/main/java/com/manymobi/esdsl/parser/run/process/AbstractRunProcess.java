@@ -18,9 +18,9 @@ public abstract class AbstractRunProcess implements RunProcess {
     /**
      * 处理器列表
      */
-    protected final List<RunProcess> child;
+    protected final RunProcess[] child;
 
-    protected AbstractRunProcess(List<RunProcess> child) {
+    protected AbstractRunProcess(RunProcess[] child) {
         this.child = child;
     }
 
