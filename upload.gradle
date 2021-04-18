@@ -1,0 +1,72 @@
+apply plugin: 'java-library'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+def getUsername() {
+    return hasProperty("sonatype.username") ? property("sonatype.username") : ""
+}
+
+def getPassword() {
+    return hasProperty("sonatype.password") ? property("sonatype.password") : ""
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = "com.manymobi"
+            artifactId = "esdsl-core"
+            pom {
+                name = 'spring-cloud-circuitbreaker-instances'
+                description = 'Single-instance CircuitBreaker'
+                url = 'https://github.com/manymobi/esdsl-core'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'Liang jianjun'
+                        name = 'Liang jianjun'
+                        email = '631583871@qq.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/manymobi/esdsl-core.git'
+                    developerConnection = 'scm:git:ssh://github.com/manymobi/esdsl-core.git'
+                    url = 'https://github.com/manymobi/esdsl-core'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def usernameL = getUsername()
+            def passwordL = getPassword()
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = usernameL
+                password = passwordL
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
