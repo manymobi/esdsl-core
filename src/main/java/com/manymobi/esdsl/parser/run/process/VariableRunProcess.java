@@ -1,10 +1,9 @@
 package com.manymobi.esdsl.parser.run.process;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.manymobi.esdsl.parser.ParamMap;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -33,19 +32,10 @@ public class VariableRunProcess extends AbstractRunProcess {
     }
 
     @Override
-    public String runProcess(Map<String, Object> parameter) throws IllegalParameterException {
-        switch (type) {
+    public String runProcess(ParamMap<String, Object> parameter) throws IllegalParameterException {
 
-            case TRANSFORMATION:
-                // TODO: 梁建军 2021/4/12  这里要换成可替代的
-                return JSONObject.toJSONString(getVariable(parameter, variableName));
-            case DIRECT:
-                return String.valueOf(getVariable(parameter, variableName));
-            case GRADLE:
-                throw new RuntimeException("未实现");
-            default:
-                throw new RuntimeException("不该运行到这里");
-        }
+        return parameter.getString(variableName, type);
+
     }
 
     public static class Build extends AbstractRunProcess.Build<VariableRunProcess> {

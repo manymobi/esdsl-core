@@ -1,9 +1,9 @@
 package com.manymobi.esdsl.parser.run.process;
 
 import com.manymobi.esdsl.parser.AgentMap;
+import com.manymobi.esdsl.parser.ParamMap;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author 梁建军
@@ -14,16 +14,46 @@ import java.util.Map;
  * for
  */
 public class ForRunProcess extends AbstractRunProcess {
-
-    private String indexName;
-    private String itemName;
-    private String parameter;
-    private String open;
-    private Boolean openB;
-    private String close;
-    private Boolean closeB;
-    private String separator;
-    private Boolean separatorB;
+    /**
+     * 序号名称
+     */
+    private final String indexName;
+    /**
+     * item名称
+     */
+    private final String itemName;
+    /**
+     * 参数名称
+     */
+    private final String parameter;
+    /**
+     * 参数名称类型
+     */
+    private final VariableRunProcess.Type parameterType;
+    /**
+     * 开始字符
+     */
+    private final String open;
+    /**
+     * 开始字符类型
+     */
+    private final VariableRunProcess.Type openType;
+    /**
+     * 结束字符
+     */
+    private final String close;
+    /**
+     * 结束字符类型
+     */
+    private final VariableRunProcess.Type closeType;
+    /**
+     * 分割字符
+     */
+    private final String separator;
+    /**
+     * 分割字符类型
+     */
+    private final VariableRunProcess.Type separatorType;
 
 
     protected ForRunProcess(List<RunProcess> child, Build build) {
@@ -31,33 +61,34 @@ public class ForRunProcess extends AbstractRunProcess {
         indexName = build.indexName;
         itemName = build.itemName;
         parameter = build.parameter;
+        parameterType = build.parameterType;
         open = build.open;
-        openB = build.openB;
+        openType = build.openType;
         close = build.close;
-        closeB = build.closeB;
+        closeType = build.closeType;
         separator = build.separator;
-        separatorB = build.separatorB;
+        separatorType = build.separatorType;
     }
 
     @Override
-    public String runProcess(Map<String, Object> parameter) throws IllegalParameterException {
+    public String runProcess(ParamMap<String, Object> parameter) throws IllegalParameterException {
         AgentMap<String, Object> agentMap = new AgentMap<>(parameter);
 
         StringBuilder stringBuilder = new StringBuilder();
 
         if (open != null) {
-            stringBuilder.append(openB ? getVariable(parameter, open) : open);
+            stringBuilder.append(openType != null ? agentMap.getString(open, openType) : open);
         }
 
-        Object o = getVariable(agentMap, this.parameter);
+        Object o = agentMap.get(this.parameter);
 
         int i = 0;
         if (o instanceof Iterable) {
-
             Iterable<Object> collection = (Iterable) o;
             for (Object o1 : collection) {
                 if (separator != null && i != 0) {
-                    stringBuilder.append(separatorB ? getVariable(parameter, separator) : separator);
+                    stringBuilder
+                            .append(separatorType != null ? agentMap.getString(separator, separatorType) : separator);
                 }
                 if (indexName != null) {
                     agentMap.put(indexName, i);
@@ -75,7 +106,7 @@ public class ForRunProcess extends AbstractRunProcess {
         }
 
         if (close != null) {
-            stringBuilder.append(closeB ? getVariable(parameter, close) : close);
+            stringBuilder.append(closeType != null ? agentMap.getString(close, closeType) : close);
         }
         return stringBuilder.toString();
     }
@@ -95,13 +126,13 @@ public class ForRunProcess extends AbstractRunProcess {
         private String indexName;
         private String itemName;
         private String parameter;
-        private VariableRunProcess.Type type;
+        private VariableRunProcess.Type parameterType;
         private String open;
-        private Boolean openB;
+        private VariableRunProcess.Type openType;
         private String close;
-        private Boolean closeB;
+        private VariableRunProcess.Type closeType;
         private String separator;
-        private Boolean separatorB;
+        private VariableRunProcess.Type separatorType;
 
         public Build() {
         }
@@ -114,27 +145,24 @@ public class ForRunProcess extends AbstractRunProcess {
             this.itemName = itemName;
         }
 
-        public void setParameter(VariableRunProcess.Type type,String parameter) {
-            this.type = type;
+        public void setParameter(VariableRunProcess.Type parameterType, String parameter) {
+            this.parameterType = parameterType;
             this.parameter = parameter;
         }
 
-        public void setOpen(Boolean openB, String open) {
+        public void setOpen(VariableRunProcess.Type openType, String open) {
             this.open = open;
-            this.openB = openB;
+            this.openType = openType;
         }
 
-        public void setOpenB() {
-        }
-
-        public void setClose(Boolean closeB, String close) {
+        public void setClose(VariableRunProcess.Type closeType, String close) {
             this.close = close;
-            this.closeB = closeB;
+            this.closeType = closeType;
         }
 
-        public void setSeparator(Boolean separatorB, String separator) {
+        public void setSeparator(VariableRunProcess.Type separatorType, String separator) {
             this.separator = separator;
-            this.separatorB = separatorB;
+            this.separatorType = separatorType;
         }
 
 

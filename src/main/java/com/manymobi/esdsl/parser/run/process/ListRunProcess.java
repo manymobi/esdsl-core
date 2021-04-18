@@ -1,8 +1,9 @@
 package com.manymobi.esdsl.parser.run.process;
 
+import com.manymobi.esdsl.parser.ParamMap;
+
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -20,7 +21,7 @@ public class ListRunProcess extends AbstractRunProcess {
     }
 
     @Override
-    public String runProcess(Map<String, Object> parameter) throws IllegalParameterException {
+    public String runProcess(ParamMap<String, Object> parameter) throws IllegalParameterException {
         return Arrays.stream(child)
                 .map(runProcess -> runProcess.runProcess(parameter))
                 .collect(Collectors.joining());

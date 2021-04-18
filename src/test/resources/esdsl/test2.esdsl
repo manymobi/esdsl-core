@@ -1,0 +1,28 @@
+==> search
+GET /index/${fulltext}/_search
+{
+  "query" : {
+	#if(#{key}=="rwerwe")
+    "match" : {
+      "id" :123133131223123212313131
+      }
+	#endif
+  },
+   "highlight" : {
+        "pre_tags" : ["<tag1>", "<tag2>"],
+        "post_tags" : ["</tag1>", "</tag2>"],
+        "fields" : {
+            "content" : #{content}
+        }
+    }
+}
+==> search1
+GET /index/${fulltext}/_search
+{
+   "query": ${content}
+}
+==> search2
+GET /index/${fulltext}/_search
+{
+   "query": #{content}
+}

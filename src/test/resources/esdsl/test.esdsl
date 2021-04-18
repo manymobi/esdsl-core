@@ -12,7 +12,7 @@ GET /index/${fulltext}/_search
         "pre_tags" : ["<tag1>", "<tag2>"],
         "post_tags" : ["</tag1>", "</tag2>"],
         "fields" : {
-            "content" : {}
+            "content" : #{content}
         }
     }
 }

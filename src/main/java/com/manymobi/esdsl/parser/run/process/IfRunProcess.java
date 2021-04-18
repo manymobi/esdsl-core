@@ -1,5 +1,7 @@
 package com.manymobi.esdsl.parser.run.process;
 
+import com.manymobi.esdsl.parser.ParamMap;
+
 import java.util.*;
 
 /**
@@ -21,7 +23,7 @@ public class IfRunProcess extends AbstractRunProcess {
     }
 
     @Override
-    public String runProcess(Map<String, Object> parameter) throws IllegalParameterException {
+    public String runProcess(ParamMap<String, Object> parameter) throws IllegalParameterException {
         for (RunProcess ifRunProcess : child) {
             String s = ifRunProcess.runProcess(parameter);
             if (s != null) {
@@ -78,7 +80,7 @@ public class IfRunProcess extends AbstractRunProcess {
         }
 
         @Override
-        public String runProcess(Map<String, Object> parameter) throws IllegalParameterException {
+        public String runProcess(ParamMap<String, Object> parameter) throws IllegalParameterException {
             String s = expressionRunProcess.runProcess(parameter);
             if (ExpressionRunProcess.FALSE.equals(s)) {
                 return null;

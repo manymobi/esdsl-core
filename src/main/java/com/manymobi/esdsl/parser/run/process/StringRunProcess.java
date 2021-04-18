@@ -1,8 +1,8 @@
 package com.manymobi.esdsl.parser.run.process;
 
-import java.util.Collections;
+import com.manymobi.esdsl.parser.ParamMap;
+
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author 梁建军
@@ -29,7 +29,7 @@ public class StringRunProcess extends AbstractRunProcess {
     }
 
     @Override
-    public String runProcess(Map<String, Object> parameter) throws IllegalParameterException {
+    public String runProcess(ParamMap<String, Object> parameter) throws IllegalParameterException {
         return content;
     }
 

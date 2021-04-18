@@ -1,4 +1,4 @@
-package com.manymobi.esdsl;
+package com.manymobi.esdsl.annotations;
 
 /**
  * @author 梁建军
@@ -23,5 +23,5 @@ public enum RequestMethod {
     /**
      * 删除
      */
-    DELETE;
+    DELETE
 }

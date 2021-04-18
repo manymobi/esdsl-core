@@ -20,6 +20,9 @@ public class JsonUtil {
      * 当 遇到 "}"或”]“ 前一个是 ","将会被去掉
      */
     public static String faultTolerant(String jsonString) {
+        if (jsonString == null) {
+            return null;
+        }
 
         //需要清除的序号
         List<Integer> clearIndex = new LinkedList<>();

@@ -1,6 +1,8 @@
 package com.manymobi.esdsl.parser.run.process;
 
 
+import com.manymobi.esdsl.parser.ParamMap;
+
 import java.util.Map;
 
 /**
@@ -14,6 +16,6 @@ public interface RunProcess {
     /**
      * @param parameter 参数
      */
-    String runProcess(Map<String, Object> parameter) throws IllegalParameterException;
+    String runProcess(ParamMap<String, Object> parameter);
 
 }

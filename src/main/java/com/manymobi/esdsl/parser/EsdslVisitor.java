@@ -1,6 +1,6 @@
 package com.manymobi.esdsl.parser;
 
-import com.manymobi.esdsl.RequestMethod;
+import com.manymobi.esdsl.annotations.RequestMethod;
 import com.manymobi.esdsl.antlr4.EsdslBaseVisitor;
 import com.manymobi.esdsl.antlr4.EsdslParser;
 import com.manymobi.esdsl.parser.run.process.*;
@@ -32,7 +32,7 @@ public class EsdslVisitor extends EsdslBaseVisitor {
     public Object visitEsdsl(EsdslParser.EsdslContext ctx) {
         String methodName = (String) visit(ctx.methodName());
         RequestBean requestBean = (RequestBean) visit(ctx.request());
-        RunProcess json = (RunProcess) visit(ctx.json());
+        RunProcess json = (RunProcess) Optional.ofNullable(ctx.json()).map(this::visit).orElse(null);
         return new EsdslBean(methodName, requestBean.requestMethod, requestBean.url, json);
     }
 
@@ -254,13 +254,13 @@ public class EsdslVisitor extends EsdslBaseVisitor {
 
             switch (forParameterContext.children.get(0).getText()) {
                 case "open":
-                    build.setOpen(false, forParameterContext.children.get(2).getText());
+                    build.setOpen(null, (String) visit(forParameterContext.children.get(2)));
                     break;
                 case "close":
-                    build.setClose(false, forParameterContext.children.get(2).getText());
+                    build.setClose(null, (String) visit(forParameterContext.children.get(2)));
                     break;
                 case "separator":
-                    build.setSeparator(false, forParameterContext.children.get(2).getText());
+                    build.setSeparator(null, (String) visit(forParameterContext.children.get(2)));
                     break;
                 default:
                     throw new RuntimeException("不该走到这个里");
@@ -277,7 +277,8 @@ public class EsdslVisitor extends EsdslBaseVisitor {
 
     @Override
     public Object visitSymbolTring(EsdslParser.SymbolTringContext ctx) {
-        return ctx.getText();
+        String text = ctx.getText();
+        return text.substring(1, text.length() - 1);
     }
 
     @Override
@@ -292,7 +293,9 @@ public class EsdslVisitor extends EsdslBaseVisitor {
                 .map(runProcess -> {
                     ListRunProcess.Build listRunProcess = new ListRunProcess.Build();
                     listRunProcess.addRunProcess(runProcess);
-                    listRunProcess.addRunProcess(new StringRunProcess(","));
+                    if (!(runProcess instanceof ForRunProcess || runProcess instanceof IfRunProcess)) {
+                        listRunProcess.addRunProcess(new StringRunProcess(","));
+                    }
                     return listRunProcess.build();
                 })
                 .orElseGet(() -> {
@@ -372,47 +375,6 @@ public class EsdslVisitor extends EsdslBaseVisitor {
                 .build();
     }
 
-    private static class EsdslBean {
-        /**
-         * 方法名称
-         */
-        private final String methodName;
-        /**
-         * 请求方式
-         */
-        private final RequestMethod requestMethod;
-        /**
-         * url 处理器
-         */
-        private final RunProcess url;
-        /**
-         * json处理器
-         */
-        private final RunProcess json;
-
-        public EsdslBean(String methodName, RequestMethod requestMethod, RunProcess url, RunProcess json) {
-            this.methodName = methodName;
-            this.requestMethod = requestMethod;
-            this.url = url;
-            this.json = json;
-        }
-
-        public String getMethodName() {
-            return methodName;
-        }
-
-        public RequestMethod getRequestMethod() {
-            return requestMethod;
-        }
-
-        public RunProcess getUrl() {
-            return url;
-        }
-
-        public RunProcess getJson() {
-            return json;
-        }
-    }
 
     private static class RequestBean {
 

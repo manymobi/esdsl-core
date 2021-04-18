@@ -1,5 +1,7 @@
 package com.manymobi.esdsl.parser.run.process;
 
+import com.manymobi.esdsl.parser.ParamMap;
+
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,25 +34,16 @@ public class ExpressionRunProcess extends AbstractRunProcess {
 
 
     @Override
-    public String runProcess(Map<String, Object> parameter) {
+    public String runProcess(ParamMap<String, Object> parameter) {
 
 
         if (!isIfRun(parameter)) {
-            return null;
+            return FALSE;
         }
-
-        StringBuilder stringBuilder = new StringBuilder();
-        for (RunProcess runProcess : child) {
-            String s = runProcess.runProcess(parameter);
-
-            if (s != null) {
-                stringBuilder.append(s);
-            }
-        }
-        return stringBuilder.toString();
+        return TRUE;
     }
 
-    private boolean isIfRun(Map<String, Object> parameter) {
+    private boolean isIfRun(ParamMap<String, Object> parameter) {
 
         boolean run = false;
 
@@ -101,7 +94,7 @@ public class ExpressionRunProcess extends AbstractRunProcess {
         return run;
     }
 
-    private boolean ifCondition(Map<String, Object> parameter, SingleIfCondition singleIfCondition) {
+    private boolean ifCondition(ParamMap<String, Object> parameter, SingleIfCondition singleIfCondition) {
         //返回结果
         boolean returnB = true;
         //逻辑符号
@@ -226,6 +219,11 @@ public class ExpressionRunProcess extends AbstractRunProcess {
 
         public void addAndOrXor(AndOrXor andOrXor) {
             andOrXors.add(andOrXor);
+        }
+
+        @Override
+        public void addRunProcess(RunProcess runProcess) {
+            throw new RuntimeException("不支持");
         }
 
         @Override
