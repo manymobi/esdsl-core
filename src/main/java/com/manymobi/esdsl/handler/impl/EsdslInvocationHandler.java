@@ -53,6 +53,9 @@ public class EsdslInvocationHandler implements InvocationHandler {
 
     /**
      * Backport of java.lang.reflect.Method#isDefault()
+     *
+     * @param method 方法名称
+     * @return true 默认方法
      */
     public static boolean isDefaultMethod(Method method) {
         return (method.getModifiers()

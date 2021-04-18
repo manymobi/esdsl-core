@@ -5,7 +5,6 @@ import com.manymobi.esdsl.antlr4.EsdslParser;
 import com.manymobi.esdsl.handler.EsdslFileResourceHandler;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.UnbufferedTokenStream;
 
 import java.io.IOException;
@@ -14,7 +13,6 @@ import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * @author 梁建军
@@ -60,6 +58,7 @@ public class EsdslResource {
     /**
      * @param fileName   文件名
      * @param methodName 方法名称
+     * @return bean
      */
     public EsdslBean get(String fileName, String methodName) {
         return esdslMap.computeIfAbsent(fileName + "#" + methodName, s -> {
@@ -71,7 +70,8 @@ public class EsdslResource {
     /**
      * 生成
      *
-     * @param esdsl
+     * @param esdsl dsl
+     * @return bean
      */
     public EsdslBean generate(String esdsl) {
 

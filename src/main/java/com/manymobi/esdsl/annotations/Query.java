@@ -16,6 +16,8 @@ import java.lang.annotation.*;
 public @interface Query {
     /**
      * 查询语句
+     *
+     * @return 查询语句
      */
     String value();
 }

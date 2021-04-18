@@ -25,6 +25,8 @@ public @interface Mapper {
 
     /**
      * 文件名称，xxx.esdsl
+     *
+     * @return 文件名
      */
     String value();
 

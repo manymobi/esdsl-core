@@ -15,11 +15,15 @@ import java.lang.annotation.*;
 public @interface RequestMapping {
     /**
      * 请求方法
+     *
+     * @return 请求方法
      */
     RequestMethod method();
 
     /**
      * 请求路径
+     *
+     * @return 请求路径
      */
     String value();
 }

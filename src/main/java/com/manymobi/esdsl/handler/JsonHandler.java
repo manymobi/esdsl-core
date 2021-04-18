@@ -31,6 +31,7 @@ public interface JsonHandler {
     /**
      * 解析json
      * @param json json
+     * @param type 参数类型
      * @return 实例对象
      */
     Object parseObject(String json, Type type);

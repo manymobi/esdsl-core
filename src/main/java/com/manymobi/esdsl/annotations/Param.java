@@ -15,7 +15,8 @@ import java.lang.annotation.*;
 @Target(ElementType.PARAMETER)
 public @interface Param {
     /**
-     * 表示参数
+     * 表示参数名称
+     * @return 名称
      */
     String value() default "";
 }

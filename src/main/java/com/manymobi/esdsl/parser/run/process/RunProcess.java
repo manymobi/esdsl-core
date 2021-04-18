@@ -3,8 +3,6 @@ package com.manymobi.esdsl.parser.run.process;
 
 import com.manymobi.esdsl.parser.ParamMap;
 
-import java.util.Map;
-
 /**
  * @author 梁建军
  * 创建日期： 2018/11/5
@@ -15,6 +13,7 @@ import java.util.Map;
 public interface RunProcess {
     /**
      * @param parameter 参数
+     * @return 处理之后的 String
      */
     String runProcess(ParamMap<String, Object> parameter);
 

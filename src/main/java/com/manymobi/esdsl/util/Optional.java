@@ -49,7 +49,7 @@ import java.util.stream.Stream;
  * ({@code ==}), identity hash code, or synchronization) on instances of
  * {@code Optional} may have unpredictable results and should be avoided.
  *
- * @apiNote
+ * apiNote
  * {@code Optional} is primarily intended for use as a method return type where
  * there is a clear need to represent "no result," and where using {@code null}
  * is likely to cause errors. A variable whose type is {@code Optional} should
@@ -84,7 +84,7 @@ public final class Optional<T> {
      * Returns an empty {@code Optional} instance.  No value is present for this
      * {@code Optional}.
      *
-     * @apiNote
+     * apiNote
      * Though it may be tempting to do so, avoid testing if an object is empty
      * by comparing with {@code ==} against instances returned by
      * {@code Optional.empty()}.  There is no guarantee that it is a singleton.
@@ -139,7 +139,7 @@ public final class Optional<T> {
      * If a value is present, returns the value, otherwise throws
      * {@code NoSuchElementException}.
      *
-     * @apiNote
+     * apiNote
      * The preferred alternative to this method is {@link #orElseThrow()}.
      *
      * @return the non-{@code null} value described by this {@code Optional}
@@ -234,7 +234,7 @@ public final class Optional<T> {
      * <p>If the mapping function returns a {@code null} result then this method
      * returns an empty {@code Optional}.
      *
-     * @apiNote
+     * apiNote
      * This method supports post-processing on {@code Optional} values, without
      * the need to explicitly check for a return status.  For example, the
      * following code traverses a stream of URIs, selects one that has not
@@ -326,7 +326,7 @@ public final class Optional<T> {
      * If a value is present, returns a sequential {@link Stream} containing
      * only that value, otherwise returns an empty {@code Stream}.
      *
-     * @apiNote
+     * apiNote
      * This method can be used to transform a {@code Stream} of optional
      * elements to a {@code Stream} of present value elements:
      * <pre>{@code
@@ -390,7 +390,7 @@ public final class Optional<T> {
      * If a value is present, returns the value, otherwise throws an exception
      * produced by the exception supplying function.
      *
-     * @apiNote
+     * apiNote
      * A method reference to the exception constructor with an empty argument
      * list can be used as the supplier. For example,
      * {@code IllegalStateException::new}
@@ -455,7 +455,7 @@ public final class Optional<T> {
      * suitable for debugging.  The exact presentation format is unspecified and
      * may vary between implementations and versions.
      *
-     * @implSpec
+     * implSpec
      * If a value is present the result must include its string representation
      * in the result.  Empty and present {@code Optional}s must be unambiguously
      * differentiable.

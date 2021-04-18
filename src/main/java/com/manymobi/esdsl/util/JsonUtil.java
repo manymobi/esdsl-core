@@ -18,6 +18,9 @@ public class JsonUtil {
      * <p>
      * 当 遇到 “{”或”[“  下一个就是 ","将会被去掉
      * 当 遇到 "}"或”]“ 前一个是 ","将会被去掉
+     *
+     * @param jsonString 原始数据
+     * @return 处理之后的json
      */
     public static String faultTolerant(String jsonString) {
         if (jsonString == null) {
