@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentMap;
  * @version 1.0
  * @since 1.0
  */
-public class Esdsl {
+public class Esdsl implements AutoCloseable{
 
     private static final Logger log = LoggerFactory.getLogger(Esdsl.class);
 
@@ -86,6 +86,11 @@ public class Esdsl {
         }
 
         return (T) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{tClass}, esdslInvocationHandler);
+    }
+
+    @Override
+    public void close() throws Exception {
+        restHandler.close();
     }
 
 
