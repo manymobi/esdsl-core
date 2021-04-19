@@ -15,7 +15,6 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * @author 梁建军
@@ -36,7 +35,7 @@ public class DefaultMethodHandler implements MethodHandler {
 
     private final RestHandler restHandler;
 
-    private final JsonHandler jsonHandler;
+    private final JsonEncoder jsonEncoder;
 
     private final RequestJsonHandler[] requestJsonHandler;
 
@@ -44,7 +43,7 @@ public class DefaultMethodHandler implements MethodHandler {
 
     private DefaultMethodHandler(Build build) {
         logger = LoggerFactory.getLogger(build.method.getDeclaringClass().getName() + "." + build.method.getName());
-        jsonHandler = build.jsonHandler;
+        jsonEncoder = build.jsonEncoder;
         restHandler = build.restHandler;
         requestJsonHandler = build.requestJsonHandler;
         ParamHandler.Build[] paramHandlers = build.paramHandlers;
@@ -135,7 +134,7 @@ public class DefaultMethodHandler implements MethodHandler {
 
     @Override
     public Object invoke(Object[] argv) throws Throwable {
-        ParamMap<String, Object> handle = paramsHandler.handle(argv, jsonHandler);
+        ParamMap<String, Object> handle = paramsHandler.handle(argv, jsonEncoder);
         RequestMethod requestMethod = esdslBean.getRequestMethod();
         String url = esdslBean.url(handle);
         String json = esdslBean.json(handle);
@@ -146,7 +145,7 @@ public class DefaultMethodHandler implements MethodHandler {
             logger.debug("==> {} {}", requestMethod, url);
             logger.debug("==> {}", json);
         }
-        return restHandler.handler(requestMethod, url, json, returnType, jsonHandler);
+        return restHandler.handler(requestMethod, url, json, returnType, jsonEncoder);
     }
 
     public static class Build {
@@ -154,7 +153,7 @@ public class DefaultMethodHandler implements MethodHandler {
         private EsdslResource esdslResource;
         private RestHandler restHandler;
         private Mapper mapper;
-        private JsonHandler jsonHandler;
+        private JsonEncoder jsonEncoder;
 
         private VariableHandler variableHandler;
 
@@ -181,8 +180,8 @@ public class DefaultMethodHandler implements MethodHandler {
             return this;
         }
 
-        public Build setJsonHandler(JsonHandler jsonHandler) {
-            this.jsonHandler = jsonHandler;
+        public Build setJsonHandler(JsonEncoder jsonEncoder) {
+            this.jsonEncoder = jsonEncoder;
             return this;
         }
 

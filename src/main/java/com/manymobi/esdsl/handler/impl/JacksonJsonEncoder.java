@@ -3,7 +3,7 @@ package com.manymobi.esdsl.handler.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.manymobi.esdsl.handler.JsonHandler;
+import com.manymobi.esdsl.handler.JsonEncoder;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import java.util.Map;
  * @version 1.0
  * @since 1.0
  */
-public class JacksonJsonHandler implements JsonHandler {
+public class JacksonJsonEncoder implements JsonEncoder {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 

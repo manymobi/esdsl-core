@@ -32,7 +32,7 @@ public class Esdsl implements AutoCloseable{
 
     private final RestHandler restHandler;
 
-    private final JsonHandler jsonHandler;
+    private final JsonEncoder jsonEncoder;
 
     private final EsdslResource esdslResource;
 
@@ -46,12 +46,12 @@ public class Esdsl implements AutoCloseable{
 
     public Esdsl(Build build) {
         this.restHandler = build.restHandler;
-        this.jsonHandler = build.jsonHandler;
+        this.jsonEncoder = build.jsonEncoder;
         this.variableHandler = build.variableHandler;
         this.requestJsonHandlers = build.requestJsonHandlers.toArray(new RequestJsonHandler[0]);
         this.paramHandlers = build.paramHandlers.toArray(new ParamHandler.Build[0]);
         for (ParamHandler.Build paramHandler : this.paramHandlers) {
-            paramHandler.setJsonHandler(jsonHandler);
+            paramHandler.setJsonHandler(jsonEncoder);
         }
         esdslResource = new EsdslResource(build.esdslFileResourceHandler);
     }
@@ -76,7 +76,7 @@ public class Esdsl implements AutoCloseable{
                         .setMapper(mapper)
                         .setEsdslResource(esdslResource)
                         .setRestHandler(restHandler)
-                        .setJsonHandler(jsonHandler)
+                        .setJsonHandler(jsonEncoder)
                         .setVariableHandler(variableHandler)
                         .setParamHandlers(paramHandlers)
                         .setRequestJsonHandler(requestJsonHandlers)
@@ -101,7 +101,7 @@ public class Esdsl implements AutoCloseable{
 
         private EsdslFileResourceHandler esdslFileResourceHandler;
 
-        private JsonHandler jsonHandler;
+        private JsonEncoder jsonEncoder;
 
         private VariableHandler variableHandler = new DefaultVariableHandler();
 
@@ -124,8 +124,8 @@ public class Esdsl implements AutoCloseable{
             this.esdslFileResourceHandler = esdslFileResourceHandler;
         }
 
-        public void setJsonHandler(JsonHandler jsonHandler) {
-            this.jsonHandler = jsonHandler;
+        public void setJsonHandler(JsonEncoder jsonEncoder) {
+            this.jsonEncoder = jsonEncoder;
         }
 
         public void setVariableHandler(VariableHandler variableHandler) {

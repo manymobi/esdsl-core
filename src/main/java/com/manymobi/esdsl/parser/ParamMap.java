@@ -1,6 +1,6 @@
 package com.manymobi.esdsl.parser;
 
-import com.manymobi.esdsl.handler.JsonHandler;
+import com.manymobi.esdsl.handler.JsonEncoder;
 import com.manymobi.esdsl.handler.VariableHandler;
 import com.manymobi.esdsl.parser.run.process.VariableRunProcess;
 
@@ -32,7 +32,7 @@ public interface ParamMap<Key, Value> extends Map<Key, Value> {
      */
     Object get(String variableName, VariableRunProcess.Type type);
 
-    JsonHandler getJsonHandler();
+    JsonEncoder getJsonHandler();
 
     VariableHandler getVariableHandler();
 }

@@ -1,15 +1,12 @@
 package com.manymobi.esdsl.handler.impl;
 
-import com.manymobi.esdsl.annotations.Param;
-import com.manymobi.esdsl.annotations.RequestBody;
-import com.manymobi.esdsl.handler.JsonHandler;
+import com.manymobi.esdsl.handler.JsonEncoder;
 import com.manymobi.esdsl.handler.ParamHandler;
 import com.manymobi.esdsl.handler.ParamsHandler;
 import com.manymobi.esdsl.handler.VariableHandler;
 import com.manymobi.esdsl.parser.ParamMap;
 import com.manymobi.esdsl.parser.ParamMapImpl;
 
-import java.lang.annotation.Annotation;
 import java.util.*;
 
 /**
@@ -32,8 +29,8 @@ public class DefaultParamsHandler implements ParamsHandler {
     }
 
     @Override
-    public ParamMap<String, Object> handle(Object[] argv, JsonHandler jsonHandler) {
-        ParamMap<String, Object> map = new ParamMapImpl<>(jsonHandler, variableHandler);
+    public ParamMap<String, Object> handle(Object[] argv, JsonEncoder jsonEncoder) {
+        ParamMap<String, Object> map = new ParamMapImpl<>(jsonEncoder, variableHandler);
         if (argv != null) {
             for (int i = 0; i < argv.length; i++) {
                 paramHandlers[i].handler(map, argv[i]);

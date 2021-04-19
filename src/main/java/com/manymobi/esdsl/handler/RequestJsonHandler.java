@@ -6,8 +6,14 @@ package com.manymobi.esdsl.handler;
  * 创建时间： 下午 3:31
  * @version 1.0
  * @since 1.0
+ * 请求json处理器
  */
 public interface RequestJsonHandler {
-
+    /**
+     * 处理请求json
+     *
+     * @param json 原始数据
+     * @return 处理后的
+     */
     String handler(String json);
 }

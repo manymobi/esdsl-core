@@ -9,9 +9,9 @@ import java.util.Map;
  * 创建时间： 下午 10:28
  * @version 1.0
  * @since 1.0
- * json处理
+ * json 编码处理
  */
-public interface JsonHandler {
+public interface JsonEncoder {
     /**
      * 转换成 String
      *

@@ -1,6 +1,6 @@
 package com.manymobi.esdsl.parser;
 
-import com.manymobi.esdsl.handler.JsonHandler;
+import com.manymobi.esdsl.handler.JsonEncoder;
 import com.manymobi.esdsl.handler.VariableHandler;
 import com.manymobi.esdsl.parser.run.process.VariableRunProcess;
 
@@ -15,12 +15,12 @@ import java.util.HashMap;
  */
 public class ParamMapImpl<Key, Value> extends HashMap<Key, Value> implements ParamMap<Key, Value> {
 
-    private final JsonHandler jsonHandler;
+    private final JsonEncoder jsonEncoder;
 
     private final VariableHandler variableHandler;
 
-    public ParamMapImpl(JsonHandler jsonHandler, VariableHandler variableHandler) {
-        this.jsonHandler = jsonHandler;
+    public ParamMapImpl(JsonEncoder jsonEncoder, VariableHandler variableHandler) {
+        this.jsonEncoder = jsonEncoder;
         this.variableHandler = variableHandler;
     }
 
@@ -29,7 +29,7 @@ public class ParamMapImpl<Key, Value> extends HashMap<Key, Value> implements Par
         switch (type) {
 
             case TRANSFORMATION:
-                return jsonHandler.toJson(variableHandler.getVariable(this, variableName));
+                return jsonEncoder.toJson(variableHandler.getVariable(this, variableName));
             case DIRECT:
                 return String.valueOf(variableHandler.getVariable(this, variableName));
             case GRADLE:
@@ -55,8 +55,8 @@ public class ParamMapImpl<Key, Value> extends HashMap<Key, Value> implements Par
 
 
     @Override
-    public JsonHandler getJsonHandler() {
-        return jsonHandler;
+    public JsonEncoder getJsonHandler() {
+        return jsonEncoder;
     }
 
     @Override

@@ -11,7 +11,12 @@ import java.io.InputStream;
  * 加载 esdsl文件
  */
 public interface EsdslFileResourceHandler {
-
+    /**
+     * 加载文件
+     *
+     * @param fileName 文件名称
+     * @return 文件流
+     */
     InputStream load(String fileName);
 
 }

@@ -8,30 +8,39 @@ import java.util.Map;
  * 创建时间： 下午 2:02
  * @version 1.0
  * @since 1.0
+ * 单个方法参数处理器
  */
 public abstract class ParamHandler<T> {
-
+    /**
+     * 参数名称
+     */
     protected String paramName;
+    /**
+     * json编码器
+     */
+    protected JsonEncoder jsonEncoder;
 
-    protected JsonHandler jsonHandler;
-
-    public ParamHandler(String paramName, JsonHandler jsonHandler) {
+    public ParamHandler(String paramName, JsonEncoder jsonEncoder) {
         this.paramName = paramName;
-        this.jsonHandler = jsonHandler;
+        this.jsonEncoder = jsonEncoder;
     }
 
-    public abstract void handler(Map<String, Object> map, T o);
+    /**
+     * @param target 目标
+     * @param target
+     * @param arg    方法的参数
+     */
+    public abstract void handler(Map<String, Object> target, T arg);
 
     public static abstract class Build<T extends ParamHandler> {
 
-        protected JsonHandler jsonHandler;
+        protected JsonEncoder jsonEncoder;
 
-        public void setJsonHandler(JsonHandler jsonHandler) {
-            this.jsonHandler = jsonHandler;
+        public void setJsonHandler(JsonEncoder jsonEncoder) {
+            this.jsonEncoder = jsonEncoder;
         }
 
         public abstract boolean can(Class<?> parameterType);
-
 
         public abstract T build(String paramName);
 

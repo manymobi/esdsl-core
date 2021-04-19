@@ -1,7 +1,7 @@
 package com.manymobi.esdsl.handler.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.manymobi.esdsl.handler.JsonHandler;
+import com.manymobi.esdsl.handler.JsonEncoder;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -13,7 +13,7 @@ import java.util.Map;
  * @version 1.0
  * @since 1.0
  */
-public class FastjsonJsonHandler implements JsonHandler {
+public class FastjsonJsonEncoder implements JsonEncoder {
 
     @Override
     public String toJson(Object o) {

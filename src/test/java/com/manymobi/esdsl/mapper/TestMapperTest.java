@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.manymobi.esdsl.Esdsl;
 import com.manymobi.esdsl.annotations.RequestMethod;
-import com.manymobi.esdsl.handler.JsonHandler;
+import com.manymobi.esdsl.handler.JsonEncoder;
 import com.manymobi.esdsl.handler.RestHandler;
-import com.manymobi.esdsl.handler.impl.FastjsonJsonHandler;
+import com.manymobi.esdsl.handler.impl.FastjsonJsonEncoder;
 import com.manymobi.esdsl.handler.impl.PathEsdslFileResourceHandler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -37,8 +37,8 @@ class TestMapperTest {
         build.setEsdslFileResourceHandler(new PathEsdslFileResourceHandler(new File("src/test/resources/")));
         build.setRestHandler(new RestHandler() {
             @Override
-            public Object handler(RequestMethod requestMethod, String url, String json, Type returnType, JsonHandler jsonHandler) {
-                return jsonHandler.parseObject(json, returnType);
+            public Object handler(RequestMethod requestMethod, String url, String json, Type returnType, JsonEncoder jsonEncoder) {
+                return jsonEncoder.parseObject(json, returnType);
             }
 
             @Override
@@ -46,7 +46,7 @@ class TestMapperTest {
 
             }
         });
-        build.setJsonHandler(new FastjsonJsonHandler());
+        build.setJsonHandler(new FastjsonJsonEncoder());
         esdsl = build.build();
     }
 

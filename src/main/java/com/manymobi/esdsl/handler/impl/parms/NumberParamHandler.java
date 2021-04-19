@@ -1,6 +1,6 @@
 package com.manymobi.esdsl.handler.impl.parms;
 
-import com.manymobi.esdsl.handler.JsonHandler;
+import com.manymobi.esdsl.handler.JsonEncoder;
 import com.manymobi.esdsl.handler.ParamHandler;
 
 import java.util.Map;
@@ -14,8 +14,8 @@ import java.util.Map;
  */
 public class NumberParamHandler extends ParamHandler<Number> {
 
-    public NumberParamHandler(String paramName, JsonHandler jsonHandler) {
-        super(paramName, jsonHandler);
+    public NumberParamHandler(String paramName, JsonEncoder jsonEncoder) {
+        super(paramName, jsonEncoder);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class NumberParamHandler extends ParamHandler<Number> {
 
         @Override
         public NumberParamHandler build(String paramName) {
-            return new NumberParamHandler(paramName, jsonHandler);
+            return new NumberParamHandler(paramName, jsonEncoder);
         }
     }
 }
