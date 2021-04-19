@@ -26,3 +26,21 @@ GET /index/${fulltext}/_search
 {
    "query": #{content}
 }
+==> search3
+GET /index/${fulltext}/_search
+{
+  "query" : {
+	#if(#{key}!=null)
+    "match" : {
+      "id" :#{key}
+      }
+	#endif
+  },
+   "highlight" : {
+        "pre_tags" : ["<tag1>", "<tag2>"],
+        "post_tags" : ["</tag1>", "</tag2>"],
+        "fields" : {
+            "content" : #{content}
+        }
+    }
+}

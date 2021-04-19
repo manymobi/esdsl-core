@@ -1,9 +1,8 @@
 package com.manymobi.esdsl.mapper;
 
 import com.alibaba.fastjson.JSONObject;
-import com.manymobi.esdsl.annotations.*;
-
-import java.util.List;
+import com.manymobi.esdsl.annotations.Mapper;
+import com.manymobi.esdsl.annotations.Param;
 
 /**
  * @author 梁建军
@@ -20,6 +19,8 @@ public interface Test2Mapper {
     JSONObject search1(@Param("content") String content, @Param("fulltext") String fulltext);
 
     JSONObject search2(@Param("content") String content, @Param("fulltext") String fulltext);
+
+    JSONObject search3(@Param Bean content, @Param("fulltext") String fulltext);
 
 
     class Bean {
