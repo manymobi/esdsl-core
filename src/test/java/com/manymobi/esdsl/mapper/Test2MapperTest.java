@@ -2,8 +2,10 @@ package com.manymobi.esdsl.mapper;
 
 import com.alibaba.fastjson.JSON;
 import com.manymobi.esdsl.Esdsl;
-import com.manymobi.esdsl.annotations.RequestMethod;
-import com.manymobi.esdsl.handler.JsonEncoder;
+import com.manymobi.esdsl.handler.Cancellable;
+import com.manymobi.esdsl.handler.Request;
+import com.manymobi.esdsl.handler.Response;
+import com.manymobi.esdsl.handler.ResponseListener;
 import com.manymobi.esdsl.handler.RestHandler;
 import com.manymobi.esdsl.handler.impl.JacksonJsonEncoder;
 import com.manymobi.esdsl.handler.impl.PathEsdslFileResourceHandler;
@@ -12,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.io.File;
-import java.lang.reflect.Type;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -35,8 +36,13 @@ class Test2MapperTest {
         build.setEsdslFileResourceHandler(new PathEsdslFileResourceHandler(new File("src/test/resources/")));
         build.setRestHandler(new RestHandler() {
             @Override
-            public Object handler(RequestMethod requestMethod, String url, String json, Type returnType, JsonEncoder jsonEncoder) {
-                return jsonEncoder.parseObject(json, returnType);
+            public Response performRequest(Request request) {
+                return new Response(200, request.getJson());
+            }
+
+            @Override
+            public Cancellable performRequestAsync(Request request, ResponseListener responseListener) {
+                return null;
             }
 
             @Override
@@ -45,7 +51,7 @@ class Test2MapperTest {
             }
         });
 //        build.setJsonHandler(new FastjsonJsonHandler());
-        build.setJsonHandler(new JacksonJsonEncoder());
+        build.setJsonEncoder(new JacksonJsonEncoder());
         esdsl = build.build();
     }
 
@@ -98,7 +104,7 @@ class Test2MapperTest {
         Test2Mapper.Bean bean = new Test2Mapper.Bean();
         bean.setContent("content");
         bean.setKey("rwerwe4");
-        Object search = target.search3(bean,"1");
+        Object search = target.search3(bean, "1");
 
 
         Object parse = JSON
@@ -112,7 +118,7 @@ class Test2MapperTest {
         Test2Mapper.Bean bean = new Test2Mapper.Bean();
         bean.setContent("content");
         bean.setKey(null);
-        Object search = target.search3(bean,"1");
+        Object search = target.search3(bean, "1");
 
 
         Object parse = JSON

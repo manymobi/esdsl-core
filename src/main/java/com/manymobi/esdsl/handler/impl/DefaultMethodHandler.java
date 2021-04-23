@@ -1,7 +1,21 @@
 package com.manymobi.esdsl.handler.impl;
 
-import com.manymobi.esdsl.annotations.*;
-import com.manymobi.esdsl.handler.*;
+import com.manymobi.esdsl.annotations.Mapper;
+import com.manymobi.esdsl.annotations.Param;
+import com.manymobi.esdsl.annotations.Query;
+import com.manymobi.esdsl.annotations.RequestBody;
+import com.manymobi.esdsl.annotations.RequestMapping;
+import com.manymobi.esdsl.annotations.RequestMethod;
+import com.manymobi.esdsl.handler.JsonEncoder;
+import com.manymobi.esdsl.handler.MethodHandler;
+import com.manymobi.esdsl.handler.ParamHandler;
+import com.manymobi.esdsl.handler.ParamsHandler;
+import com.manymobi.esdsl.handler.Request;
+import com.manymobi.esdsl.handler.RequestHandler;
+import com.manymobi.esdsl.handler.ResponseBodyHandler;
+import com.manymobi.esdsl.handler.ResponseContextHandler;
+import com.manymobi.esdsl.handler.RestHandler;
+import com.manymobi.esdsl.handler.VariableHandler;
 import com.manymobi.esdsl.parser.EsdslBean;
 import com.manymobi.esdsl.parser.EsdslResource;
 import com.manymobi.esdsl.parser.ParamMap;
@@ -37,15 +51,19 @@ public class DefaultMethodHandler implements MethodHandler {
 
     private final JsonEncoder jsonEncoder;
 
-    private final RequestJsonHandler[] requestJsonHandler;
+    private final RequestHandler[] requestHandler;
 
     private final Logger logger;
+
+    private final ResponseBodyHandler responseBodyHandler;
+
+    private final ResponseContextHandler responseContextHandler;
 
     private DefaultMethodHandler(Build build) {
         logger = LoggerFactory.getLogger(build.method.getDeclaringClass().getName() + "." + build.method.getName());
         jsonEncoder = build.jsonEncoder;
-        restHandler = build.restHandler;
-        requestJsonHandler = build.requestJsonHandler;
+        restHandler = new LogRestHandler(build.restHandler, logger);
+        requestHandler = build.requestHandler;
         ParamHandler.Build[] paramHandlers = build.paramHandlers;
         Method method = build.method;
 
@@ -87,7 +105,7 @@ public class DefaultMethodHandler implements MethodHandler {
         boolean requestMappingBoolean = true;
         RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
         if (requestMapping != null) {
-            esdslStringBuilder.append(requestMapping.method().toString())
+            esdslStringBuilder.append(requestMapping.method().name())
                     .append(" ")
                     .append(requestMapping.value())
                     .append("\n");
@@ -129,6 +147,19 @@ public class DefaultMethodHandler implements MethodHandler {
         //返回值
         returnType = method.getGenericReturnType();
 
+        //获取相应表层处理
+        responseBodyHandler = Arrays.stream(build.responseBodyHandler)
+                .filter(handler -> handler.can(method, returnType))
+                .findFirst()
+                .get();
+        Type contextType = responseBodyHandler.getContextType(returnType);
+
+        //获取内容处理
+        responseContextHandler = Arrays.stream(build.responseContextHandler)
+                .filter(handler -> handler.can(method, contextType))
+                .findFirst()
+                .get();
+
     }
 
 
@@ -138,14 +169,12 @@ public class DefaultMethodHandler implements MethodHandler {
         RequestMethod requestMethod = esdslBean.getRequestMethod();
         String url = esdslBean.url(handle);
         String json = esdslBean.json(handle);
-        for (RequestJsonHandler handler : requestJsonHandler) {
-            json = handler.handler(json);
+        Request request = new Request(requestMethod, url, json);
+
+        for (RequestHandler handler : requestHandler) {
+            request = handler.handler(request);
         }
-        if (logger.isDebugEnabled()) {
-            logger.debug("==> {} {}", requestMethod, url);
-            logger.debug("==> {}", json);
-        }
-        return restHandler.handler(requestMethod, url, json, returnType, jsonEncoder);
+        return responseBodyHandler.handler(restHandler, request, returnType, responseContextHandler);
     }
 
     public static class Build {
@@ -154,11 +183,11 @@ public class DefaultMethodHandler implements MethodHandler {
         private RestHandler restHandler;
         private Mapper mapper;
         private JsonEncoder jsonEncoder;
-
         private VariableHandler variableHandler;
-
         private ParamHandler.Build[] paramHandlers;
-        private RequestJsonHandler[] requestJsonHandler;
+        private RequestHandler[] requestHandler;
+        private ResponseBodyHandler[] responseBodyHandler;
+        private ResponseContextHandler[] responseContextHandler;
 
         public Build setMethods(Method method) {
             this.method = method;
@@ -195,13 +224,25 @@ public class DefaultMethodHandler implements MethodHandler {
             return this;
         }
 
+        public Build setRequestJsonHandler(RequestHandler[] requestHandler) {
+            this.requestHandler = requestHandler;
+            return this;
+        }
+
+        public Build setResponseBodyHandler(ResponseBodyHandler[] responseBodyHandler) {
+            this.responseBodyHandler = responseBodyHandler;
+            return this;
+        }
+
+        public Build setResponseContextHandler(ResponseContextHandler[] responseContextHandler) {
+            this.responseContextHandler = responseContextHandler;
+            return this;
+        }
+
         public DefaultMethodHandler build() {
             return new DefaultMethodHandler(this);
         }
 
-        public Build setRequestJsonHandler(RequestJsonHandler[] requestJsonHandler) {
-            this.requestJsonHandler = requestJsonHandler;
-            return this;
-        }
+
     }
 }

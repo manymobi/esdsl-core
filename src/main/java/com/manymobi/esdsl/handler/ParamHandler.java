@@ -27,7 +27,6 @@ public abstract class ParamHandler<T> {
 
     /**
      * @param target 目标
-     * @param target
      * @param arg    方法的参数
      */
     public abstract void handler(Map<String, Object> target, T arg);

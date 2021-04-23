@@ -26,14 +26,21 @@ public interface JsonEncoder {
      * @param o obj
      * @return map
      */
-    Map<Object,Object> toJsonMap(Object o);
+    Map<Object, Object> toJsonMap(Object o);
 
     /**
      * 解析json
+     *
      * @param json json
      * @param type 参数类型
      * @return 实例对象
      */
     Object parseObject(String json, Type type);
+
+
+    interface Set {
+
+        void setJsonEncoder(JsonEncoder jsonEncoder);
+    }
 
 }

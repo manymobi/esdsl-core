@@ -3,8 +3,10 @@ package com.manymobi.esdsl.mapper;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.manymobi.esdsl.Esdsl;
-import com.manymobi.esdsl.annotations.RequestMethod;
-import com.manymobi.esdsl.handler.JsonEncoder;
+import com.manymobi.esdsl.handler.Cancellable;
+import com.manymobi.esdsl.handler.Request;
+import com.manymobi.esdsl.handler.Response;
+import com.manymobi.esdsl.handler.ResponseListener;
 import com.manymobi.esdsl.handler.RestHandler;
 import com.manymobi.esdsl.handler.impl.FastjsonJsonEncoder;
 import com.manymobi.esdsl.handler.impl.PathEsdslFileResourceHandler;
@@ -13,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,16 +38,22 @@ class TestMapperTest {
         build.setEsdslFileResourceHandler(new PathEsdslFileResourceHandler(new File("src/test/resources/")));
         build.setRestHandler(new RestHandler() {
             @Override
-            public Object handler(RequestMethod requestMethod, String url, String json, Type returnType, JsonEncoder jsonEncoder) {
-                return jsonEncoder.parseObject(json, returnType);
+            public Response performRequest(Request request) {
+                return new Response(200, request.getJson());
             }
+
+            @Override
+            public Cancellable performRequestAsync(Request request, ResponseListener responseListener) {
+                return null;
+            }
+
 
             @Override
             public void close() throws Exception {
 
             }
         });
-        build.setJsonHandler(new FastjsonJsonEncoder());
+        build.setJsonEncoder(new FastjsonJsonEncoder());
         esdsl = build.build();
     }
 
@@ -94,6 +101,7 @@ class TestMapperTest {
         Object search = target.search2("0000000000000", 2);
         assertEquals("{\"ssss\":\"0000000000000\",\"integer\":2}", search.toString());
     }
+
     @Test
     public void search3() {
         TestMapper target = esdsl.target(TestMapper.class);

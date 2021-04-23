@@ -22,6 +22,8 @@ dependencies {
     implementation 'org.antlr:antlr4-runtime:4.7.2'
     implementation('org.slf4j:slf4j-api:1.7.30')
 
+    compileOnly 'org.elasticsearch.client:elasticsearch-rest-client:7.12.0'
+    compileOnly ('io.projectreactor:reactor-core:3.3.13.RELEASE')
 
     testCompile('com.alibaba:fastjson:1.2.76')
     compileOnly('com.alibaba:fastjson:1.2.76')

@@ -8,12 +8,12 @@ package com.manymobi.esdsl.handler;
  * @since 1.0
  * 请求json处理器
  */
-public interface RequestJsonHandler {
+public interface RequestHandler {
     /**
      * 处理请求json
      *
      * @param json 原始数据
      * @return 处理后的
      */
-    String handler(String json);
+    Request handler(Request json);
 }

@@ -14,8 +14,8 @@ public interface ParamsHandler {
     /**
      *
      * @param argv 方法参数
-     * @param jsonEncoder
-     * @return
+     * @param jsonEncoder json编码器
+     * @return map
      */
     ParamMap<String, Object> handle(Object[] argv, JsonEncoder jsonEncoder);
 
