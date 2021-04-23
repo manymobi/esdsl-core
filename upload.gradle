@@ -22,8 +22,8 @@ publishing {
             groupId = "com.manymobi"
             artifactId = "esdsl-core"
             pom {
-                name = 'spring-cloud-circuitbreaker-instances'
-                description = 'Single-instance CircuitBreaker'
+                name = 'esdsl-core'
+                description = 'EsDsl elasticsearch query mapper framework for Java'
                 url = 'https://github.com/manymobi/esdsl-core'
                 licenses {
                     license {
