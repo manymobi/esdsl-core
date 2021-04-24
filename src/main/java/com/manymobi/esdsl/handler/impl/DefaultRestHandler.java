@@ -1,5 +1,6 @@
 package com.manymobi.esdsl.handler.impl;
 
+import com.manymobi.esdsl.exception.NotFoundException;
 import com.manymobi.esdsl.handler.Cancellable;
 import com.manymobi.esdsl.handler.Request;
 import com.manymobi.esdsl.handler.Response;
@@ -73,7 +74,7 @@ public class DefaultRestHandler implements RestHandler {
 
     private Response to(org.elasticsearch.client.Response response) {
         int statusCode = response.getStatusLine().getStatusCode();
-        String body = null;
+        String body;
         try {
             body = EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
@@ -88,7 +89,11 @@ public class DefaultRestHandler implements RestHandler {
             return (RuntimeException) e;
         }
         if (e instanceof ResponseException) {
-            return new com.manymobi.esdsl.exception.ResponseException(to(((ResponseException) e).getResponse()));
+            Response to = to(((ResponseException) e).getResponse());
+            if (to.getStatusCode() == 404) {
+                return new NotFoundException(to);
+            }
+            return new com.manymobi.esdsl.exception.ResponseException(to);
         }
         return new RuntimeException(e);
 
