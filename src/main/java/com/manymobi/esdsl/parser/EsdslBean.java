@@ -1,7 +1,7 @@
 package com.manymobi.esdsl.parser;
 
-import com.alibaba.fastjson.JSON;
 import com.manymobi.esdsl.annotations.RequestMethod;
+import com.manymobi.esdsl.handler.JsonEncoder;
 import com.manymobi.esdsl.parser.run.process.RunProcess;
 import com.manymobi.esdsl.util.Optional;
 
@@ -83,13 +83,13 @@ public class EsdslBean {
         return dynamicRequestBody;
     }
 
-    public String json(ParamMap<String, Object> parameter) {
+    public String json(ParamMap<String, Object> parameter, JsonEncoder jsonEncoder) {
         if (dynamicRequestBody) {
             Object requestBody = parameter.get("requestBody");
             if (requestBody instanceof String) {
                 return (String) requestBody;
             }
-            return JSON.toJSONString(requestBody);
+            return jsonEncoder.toJson(requestBody);
         }
         if (json == null) {
             return null;

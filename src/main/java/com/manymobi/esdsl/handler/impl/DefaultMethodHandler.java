@@ -168,7 +168,7 @@ public class DefaultMethodHandler implements MethodHandler {
         ParamMap<String, Object> handle = paramsHandler.handle(argv, jsonEncoder);
         RequestMethod requestMethod = esdslBean.getRequestMethod();
         String url = esdslBean.url(handle);
-        String json = esdslBean.json(handle);
+        String json = esdslBean.json(handle, jsonEncoder);
         Request request = new Request(requestMethod, url, json);
 
         for (RequestHandler handler : requestHandler) {
