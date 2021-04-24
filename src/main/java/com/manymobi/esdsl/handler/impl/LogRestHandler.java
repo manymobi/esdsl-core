@@ -7,8 +7,6 @@ import com.manymobi.esdsl.handler.ResponseListener;
 import com.manymobi.esdsl.handler.RestHandler;
 import org.slf4j.Logger;
 
-import java.io.IOException;
-
 /**
  * @author 梁建军
  * 创建日期： 2021/4/23
@@ -29,7 +27,7 @@ public class LogRestHandler implements RestHandler {
     }
 
     @Override
-    public Response performRequest(Request request) throws IOException {
+    public Response performRequest(Request request) {
 
         log(request);
         Response response = restHandler.performRequest(request);

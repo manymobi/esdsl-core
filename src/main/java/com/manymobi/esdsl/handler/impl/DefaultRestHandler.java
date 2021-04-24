@@ -5,6 +5,7 @@ import com.manymobi.esdsl.handler.Request;
 import com.manymobi.esdsl.handler.Response;
 import com.manymobi.esdsl.handler.RestHandler;
 import org.apache.http.util.EntityUtils;
+import org.elasticsearch.client.ResponseException;
 import org.elasticsearch.client.ResponseListener;
 import org.elasticsearch.client.RestClient;
 
@@ -31,9 +32,14 @@ public class DefaultRestHandler implements RestHandler {
     }
 
     @Override
-    public Response performRequest(com.manymobi.esdsl.handler.Request request) throws IOException {
-        return to(restClient.performRequest(to(request)));
+    public Response performRequest(Request request) {
+        try {
+            return to(restClient.performRequest(to(request)));
+        } catch (IOException e) {
+            throw to(e);
+        }
     }
+
 
     @Override
     public Cancellable performRequestAsync(Request request, com.manymobi.esdsl.handler.ResponseListener responseListener) {
@@ -42,8 +48,8 @@ public class DefaultRestHandler implements RestHandler {
             public void onSuccess(org.elasticsearch.client.Response response) {
                 try {
                     responseListener.onSuccess(to(response));
-                } catch (IOException e) {
-                    onFailure(e);
+                } catch (Exception e) {
+                    onFailure(to(e));
                 }
             }
 
@@ -65,9 +71,26 @@ public class DefaultRestHandler implements RestHandler {
         return request;
     }
 
-    private Response to(org.elasticsearch.client.Response response) throws IOException {
+    private Response to(org.elasticsearch.client.Response response) {
         int statusCode = response.getStatusLine().getStatusCode();
-        String body = EntityUtils.toString(response.getEntity());
+        String body = null;
+        try {
+            body = EntityUtils.toString(response.getEntity());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return new Response(statusCode, body);
+    }
+
+
+    private RuntimeException to(Exception e) {
+        if (e instanceof RuntimeException) {
+            return (RuntimeException) e;
+        }
+        if (e instanceof ResponseException) {
+            return new com.manymobi.esdsl.exception.ResponseException(to(((ResponseException) e).getResponse()));
+        }
+        return new RuntimeException(e);
+
     }
 }
