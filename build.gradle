@@ -19,7 +19,7 @@ test {
 
 dependencies {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.7.1'
-    compile 'org.antlr:antlr4-runtime:4.7.2'
+    compile 'org.antlr:antlr4-runtime:4.9.2'
     compile('org.slf4j:slf4j-api:1.7.30')
 
     compileOnly 'org.elasticsearch.client:elasticsearch-rest-client:7.12.0'

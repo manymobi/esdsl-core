@@ -32,7 +32,7 @@ REQUEST_METHOD
 
 
 uri
-   : ('/' path)? query? WS?
+   : '/'? path? ('?' query)? WS?
    ;
 
 
