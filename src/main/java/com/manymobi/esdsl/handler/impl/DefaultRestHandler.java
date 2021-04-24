@@ -31,13 +31,8 @@ public class DefaultRestHandler implements RestHandler {
     }
 
     @Override
-    public Response performRequest(com.manymobi.esdsl.handler.Request request) {
-
-        try {
-            return to(restClient.performRequest(to(request)));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public Response performRequest(com.manymobi.esdsl.handler.Request request) throws IOException {
+        return to(restClient.performRequest(to(request)));
     }
 
     @Override

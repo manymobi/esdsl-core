@@ -1,5 +1,7 @@
 package com.manymobi.esdsl.handler;
 
+import java.io.IOException;
+
 /**
  * @author 梁建军
  * 创建日期： 2018/11/8
@@ -14,8 +16,9 @@ public interface RestHandler extends AutoCloseable {
      *
      * @param request 请求
      * @return 响应
+     * @throws IOException io异常
      */
-    Response performRequest(Request request);
+    Response performRequest(Request request) throws IOException;
 
 
     /**

@@ -1,5 +1,6 @@
 package com.manymobi.esdsl.handler;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
@@ -15,7 +16,7 @@ import java.lang.reflect.Type;
  */
 public interface ResponseBodyHandler extends JsonEncoder.Set {
 
-    Object handler(RestHandler restHandler, Request request, Type returnType, ResponseContextHandler responseContextHandler);
+    Object handler(RestHandler restHandler, Request request, Type returnType, ResponseContextHandler responseContextHandler) throws IOException;
 
     /**
      * 判断是否是当前处理器处理
