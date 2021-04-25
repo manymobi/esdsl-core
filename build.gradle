@@ -4,7 +4,7 @@ plugins {
 apply from: 'upload.gradle'
 
 group 'com.manymobi'
-version '1.0.0-SNAPSHOT'
+version '1.0.0-beta1'
 
 sourceCompatibility = 1.8
 
