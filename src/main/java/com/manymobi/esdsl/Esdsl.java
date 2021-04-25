@@ -191,36 +191,44 @@ public class Esdsl implements AutoCloseable {
         );
 
 
-        public void setRestHandler(RestHandler restHandler) {
+        public Build setRestHandler(RestHandler restHandler) {
             this.restHandler = restHandler;
+            return this;
         }
 
-        public void setEsdslFileResourceHandler(EsdslFileResourceHandler esdslFileResourceHandler) {
+        public Build setEsdslFileResourceHandler(EsdslFileResourceHandler esdslFileResourceHandler) {
             this.esdslFileResourceHandler = esdslFileResourceHandler;
+            return this;
         }
 
-        public void setJsonEncoder(JsonEncoder jsonEncoder) {
+        public Build setJsonEncoder(JsonEncoder jsonEncoder) {
             this.jsonEncoder = jsonEncoder;
+            return this;
         }
 
-        public void setVariableHandler(VariableHandler variableHandler) {
+        public Build setVariableHandler(VariableHandler variableHandler) {
             this.variableHandler = variableHandler;
+            return this;
         }
 
-        public void setParamHandlers(List<ParamHandler.Build> paramHandlers) {
+        public Build setParamHandlers(List<ParamHandler.Build> paramHandlers) {
             this.paramHandlers = paramHandlers;
+            return this;
         }
 
-        public void setRestClient(RestClient restClient) {
+        public Build setRestClient(RestClient restClient) {
             this.restHandler = new DefaultRestHandler(restClient);
+            return this;
         }
 
-        public void setResponseBodyHandlers(List<ResponseBodyHandler> responseBodyHandlers) {
+        public Build setResponseBodyHandlers(List<ResponseBodyHandler> responseBodyHandlers) {
             this.responseBodyHandlers = responseBodyHandlers;
+            return this;
         }
 
-        public void setResponseContextHandlers(List<ResponseContextHandler> responseContextHandlers) {
+        public Build setResponseContextHandlers(List<ResponseContextHandler> responseContextHandlers) {
             this.responseContextHandlers = responseContextHandlers;
+            return this;
         }
 
         public void setRequestHandlers(List<RequestHandler> requestHandlers) {
