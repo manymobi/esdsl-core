@@ -5,7 +5,19 @@ EsDsl 框架使得将 Elasticsearch 与面向对象应用程序结合使用变�
 
 
 # 如何使用?
-
+   -   Maven:
+       ```xml
+       <dependency>
+           <groupId>com.manymobi</groupId>
+           <artifactId>esdsl-core</artifactId>
+           <version>1.0.0-beta1</version>
+       </dependency>
+       ```
+   -   Gradle
+       ```groovy
+       compile 'com.manymobi:esdsl-core:1.0.0-beta1'
+       ```
+       
 ```java
        RestClient restClient;
 
