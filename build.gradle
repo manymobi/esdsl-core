@@ -1,10 +1,11 @@
 plugins {
     id 'java'
 }
+apply plugin: 'antlr'
 apply from: 'upload.gradle'
 
 group 'com.manymobi'
-version '1.0.0-beta1'
+version '1.0.0-beta2-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
@@ -16,14 +17,19 @@ test {
     useJUnitPlatform()
 }
 
+configurations {
+    compile {
+        extendsFrom = extendsFrom.findAll { it != configurations.antlr }
+    }
+}
 
 dependencies {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.7.1'
     compile 'org.antlr:antlr4-runtime:4.9.2'
     compile('org.slf4j:slf4j-api:1.7.30')
-
+    antlr("org.antlr:antlr4:4.9.2")
     compileOnly 'org.elasticsearch.client:elasticsearch-rest-client:7.12.0'
-    compileOnly ('io.projectreactor:reactor-core:3.3.13.RELEASE')
+    compileOnly('io.projectreactor:reactor-core:3.3.13.RELEASE')
 
     testCompile('com.alibaba:fastjson:1.2.76')
     compileOnly('com.alibaba:fastjson:1.2.76')
@@ -33,4 +39,8 @@ dependencies {
     testCompile('com.fasterxml.jackson.core:jackson-databind:2.12.3')
 
     testCompile('ch.qos.logback:logback-classic:1.2.3')
+}
+
+generateGrammarSource {
+    arguments += ["-package", "com.manymobi.esdsl.antlr4", "-visitor"]
 }
