@@ -1,9 +1,16 @@
 package com.manymobi.esdsl.parser;
 
 import com.manymobi.esdsl.annotations.RequestMethod;
-import com.manymobi.esdsl.antlr4.EsdslBaseVisitor;
 import com.manymobi.esdsl.antlr4.EsdslParser;
-import com.manymobi.esdsl.parser.run.process.*;
+import com.manymobi.esdsl.parser.run.process.AndOrXor;
+import com.manymobi.esdsl.parser.run.process.ExpressionRunProcess;
+import com.manymobi.esdsl.parser.run.process.ForRunProcess;
+import com.manymobi.esdsl.parser.run.process.IfRunProcess;
+import com.manymobi.esdsl.parser.run.process.ListRunProcess;
+import com.manymobi.esdsl.parser.run.process.RunProcess;
+import com.manymobi.esdsl.parser.run.process.StringRunProcess;
+import com.manymobi.esdsl.parser.run.process.VariableRunProcess;
+import com.manymobi.esdsl.antlr4.EsdslParserBaseVisitor;
 import com.manymobi.esdsl.util.Optional;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -18,7 +25,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @since 1.0
  */
-public class EsdslVisitor extends EsdslBaseVisitor {
+public class EsdslVisitor extends EsdslParserBaseVisitor {
 
     @Override
     public Object visitEsdslarray(EsdslParser.EsdslarrayContext ctx) {
@@ -30,17 +37,13 @@ public class EsdslVisitor extends EsdslBaseVisitor {
 
     @Override
     public Object visitEsdsl(EsdslParser.EsdslContext ctx) {
-        String methodName = (String) visit(ctx.methodName());
+
+        String methodName = ctx.ID().getText();
         RequestBean requestBean = (RequestBean) visit(ctx.request());
         RunProcess json = (RunProcess) Optional.ofNullable(ctx.json()).map(this::visit).orElse(null);
         return new EsdslBean(methodName, requestBean.requestMethod, requestBean.url, json);
     }
 
-    @Override
-    public Object visitMethodName(EsdslParser.MethodNameContext ctx) {
-        return ctx.STRING1()
-                .getText();
-    }
 
     @Override
     public Object visitRequest(EsdslParser.RequestContext ctx) {
@@ -139,7 +142,7 @@ public class EsdslVisitor extends EsdslBaseVisitor {
 
     @Override
     public Object visitString(EsdslParser.StringContext ctx) {
-        TerminalNode terminalNode = ctx.STRING1();
+        TerminalNode terminalNode = ctx.ID();
         if (terminalNode != null) {
             return new StringRunProcess.Build()
                     .addString(terminalNode.getText())

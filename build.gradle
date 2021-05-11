@@ -42,5 +42,11 @@ dependencies {
 }
 
 generateGrammarSource {
-    arguments += ["-package", "com.manymobi.esdsl.antlr4", "-visitor"]
+    include("**/*.g4")
+    arguments += [
+            "-package", "com.manymobi.esdsl.antlr4",
+            "-lib", "src/main/antlr/com/manymobi/esdsl/antlr4",
+            "-visitor",
+            "-Xexact-output-dir"
+    ]
 }

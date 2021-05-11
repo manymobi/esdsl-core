@@ -5,7 +5,8 @@ import com.manymobi.esdsl.antlr4.EsdslParser;
 import com.manymobi.esdsl.handler.EsdslFileResourceHandler;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.UnbufferedTokenStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,8 +36,10 @@ public class EsdslResource {
     public void load(String fileName, InputStream inputStream) {
         EsdslParser esdslParser = null;
         try {
-            esdslParser = new EsdslParser(new UnbufferedTokenStream(new EsdslLexer(CharStreams
-                    .fromStream(inputStream))));
+            EsdslLexer esdslLexer = new EsdslLexer(CharStreams
+                    .fromStream(inputStream));
+            CommonTokenStream commonTokenStream = new CommonTokenStream(esdslLexer, Token.DEFAULT_CHANNEL);
+            esdslParser = new EsdslParser(commonTokenStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
@@ -77,7 +80,7 @@ public class EsdslResource {
 
         EsdslParser esdslParser = null;
         try {
-            esdslParser = new EsdslParser(new UnbufferedTokenStream(new EsdslLexer(CharStreams
+            esdslParser = new EsdslParser(new CommonTokenStream(new EsdslLexer(CharStreams
                     .fromReader(new StringReader("==> temp\n" + esdsl)))));
         } catch (IOException e) {
             throw new RuntimeException(e);
