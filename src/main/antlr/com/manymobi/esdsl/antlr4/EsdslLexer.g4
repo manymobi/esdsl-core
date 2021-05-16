@@ -60,7 +60,6 @@ CLOSE : 'close';
 SEPARATOR : 'separator';
 IN: 'in' ;
 FUNC : '==>' ;
-BANG : '!' | '~' ;
 AND_OR_XOR
     :AND
     |'&&'
