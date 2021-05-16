@@ -1,6 +1,7 @@
 package com.manymobi.esdsl.handler.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.manymobi.esdsl.handler.JsonEncoder;
 
 import java.lang.reflect.Type;
@@ -17,7 +18,7 @@ public class FastjsonJsonEncoder implements JsonEncoder {
 
     @Override
     public String toJson(Object o) {
-        return JSON.toJSONString(o);
+        return JSON.toJSONString(o, SerializerFeature.DisableCircularReferenceDetect);
     }
 
     @Override
