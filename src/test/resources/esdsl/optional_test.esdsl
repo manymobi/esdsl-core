@@ -1,0 +1,18 @@
+==> search1
+GET index/${fulltext}/_search?pretty
+{
+  "query" : {
+	#if(232=="rwerwe")
+    "match" : {
+      "id" :123133131223123212313131
+      }
+	#endif
+  },
+   "highlight" : {
+        "pre_tags" : ["<tag1>", "<tag2>"],
+        "post_tags" : ["</tag1>", "</tag2>"],
+        "fields" : {
+            "content" : #{content}
+        }
+    }
+}
