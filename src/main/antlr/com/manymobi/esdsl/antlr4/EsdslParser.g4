@@ -16,7 +16,7 @@ request
 
 
 uri
-   : '/'? path? ('?' query)? WS?
+   : '/'? path?  query? WS?
    ;
 
 
@@ -29,7 +29,7 @@ query
    ;
 
 search
-   : searchparameter? ('&' searchparameter?)*
+   : searchparameter (AND searchparameter?)*
    ;
 
 searchparameter
