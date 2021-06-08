@@ -11,6 +11,7 @@ REQUEST_METHOD
    | 'POST'
    | 'PUT'
    | 'DELETE'
+   | 'HEAD'
    ;
 
 
@@ -60,6 +61,7 @@ CLOSE : 'close';
 SEPARATOR : 'separator';
 IN: 'in' ;
 FUNC : '==>' ;
+AND :'&';
 AND_OR_XOR
     :AND
     |'&&'
@@ -80,7 +82,6 @@ STRING
 /*单引号*/
 SINGLE_QUOTATION_MARK : '\'';
 
-AND :'&';
 PARAMETER
   :'#{' (ESC | SAFECODEPOINT)* '}'
   |'${' (ESC | SAFECODEPOINT)* '}'
