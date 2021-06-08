@@ -41,6 +41,8 @@ public class DefaultMethodHandler implements MethodHandler {
 
     private final Type returnType;
 
+    private final Type contextType;
+
     private final EsdslBean esdslBean;
     /**
      * 参数
@@ -152,7 +154,7 @@ public class DefaultMethodHandler implements MethodHandler {
                 .filter(handler -> handler.can(method, returnType))
                 .findFirst()
                 .get();
-        Type contextType = responseBodyHandler.getContextType(returnType);
+        contextType = responseBodyHandler.getContextType(returnType);
 
         //获取内容处理
         responseContextHandler = Arrays.stream(build.responseContextHandler)
@@ -174,7 +176,7 @@ public class DefaultMethodHandler implements MethodHandler {
         for (RequestHandler handler : requestHandler) {
             request = handler.handler(request);
         }
-        return responseBodyHandler.handler(restHandler, request, returnType, responseContextHandler);
+        return responseBodyHandler.handler(restHandler, request, returnType, contextType, responseContextHandler);
     }
 
     public static class Build {

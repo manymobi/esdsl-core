@@ -6,7 +6,6 @@ import com.manymobi.esdsl.handler.ResponseBodyHandler;
 import com.manymobi.esdsl.handler.ResponseContextHandler;
 import com.manymobi.esdsl.handler.RestHandler;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
@@ -18,11 +17,13 @@ import java.lang.reflect.Type;
  * @since 1.0
  */
 public class ObjectResponseBodyHandler implements ResponseBodyHandler {
+
     @Override
-    public Object handler(RestHandler restHandler, Request request, Type returnType, ResponseContextHandler responseContextHandler) throws IOException {
+    public Object handler(RestHandler restHandler, Request request, Type returnType, Type contextType, ResponseContextHandler responseContextHandler) {
         Response response = restHandler.performRequest(request);
-        return responseContextHandler.handler(response.getBody(), returnType);
+        return responseContextHandler.handler(response.getBody(), contextType);
     }
+
 
     @Override
     public boolean can(Method method, Type returnType) {
