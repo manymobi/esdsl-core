@@ -7,6 +7,7 @@ import com.manymobi.esdsl.handler.MethodHandler;
 import com.manymobi.esdsl.handler.ParamHandler;
 import com.manymobi.esdsl.handler.RequestHandler;
 import com.manymobi.esdsl.handler.ResponseBodyHandler;
+import com.manymobi.esdsl.handler.ResponseContextHandler;
 import com.manymobi.esdsl.handler.RestHandler;
 import com.manymobi.esdsl.handler.VariableHandler;
 import com.manymobi.esdsl.handler.impl.DefaultMethodHandler;
@@ -14,12 +15,13 @@ import com.manymobi.esdsl.handler.impl.DefaultRestHandler;
 import com.manymobi.esdsl.handler.impl.DefaultVariableHandler;
 import com.manymobi.esdsl.handler.impl.EsdslInvocationHandler;
 import com.manymobi.esdsl.handler.impl.FaultTolerantRequestHandler;
-import com.manymobi.esdsl.handler.ResponseContextHandler;
 import com.manymobi.esdsl.handler.impl.parms.NumberParamHandler;
 import com.manymobi.esdsl.handler.impl.parms.ObjectParamHandler;
 import com.manymobi.esdsl.handler.impl.parms.StringParamHandler;
+import com.manymobi.esdsl.handler.impl.response.FutureResponseBodyHandler;
 import com.manymobi.esdsl.handler.impl.response.ObjectResponseBodyHandler;
 import com.manymobi.esdsl.handler.impl.response.ObjectResponseContextHandler;
+import com.manymobi.esdsl.handler.impl.response.OptionalResponseBodyHandler;
 import com.manymobi.esdsl.parser.EsdslResource;
 import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
@@ -173,6 +175,8 @@ public class Esdsl implements AutoCloseable {
 
 
         private List<ResponseBodyHandler> responseBodyHandlers = Arrays.asList(
+                new OptionalResponseBodyHandler(),
+                new FutureResponseBodyHandler(),
                 new ObjectResponseBodyHandler()
         );
 
