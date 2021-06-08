@@ -1,8 +1,9 @@
-EsDsl elasticsearch query mapper framework for Java
+Esdsl elasticsearch query mapper framework for Java
 ===============================================
 
-EsDsl 框架使得将 Elasticsearch 与面向对象应用程序结合使用变得更加容易。
+Esdsl 框架使得将 Elasticsearch 与面向对象应用程序结合使用变得更加容易。
 
+# [Spring Boot 中使用请点击这里](https://github.com/manymobi/esdsl-spring)
 
 # 如何使用?
    -   Maven:
@@ -72,8 +73,10 @@ EsDsl 框架使得将 Elasticsearch 与面向对象应用程序结合使用变�
     
 1. 变量:#{} 会对变量预处理   ${}会直接拼接上
 
-
-# [Spring Boot 中使用请点击这里](https://github.com/manymobi/esdsl-spring)
+# mapper 方法支持返回对象
+    1. Optional
+    2. Future,CompletableFuture,CompletionStage
+    3. 其他对象将使用使用json解析框架解析
 
 # esdsl 文件配色配置
     在idea设置里面添加一个新的文件类型，点击 “1” 即可打开 2 的设置框,在框中按图设置即可
