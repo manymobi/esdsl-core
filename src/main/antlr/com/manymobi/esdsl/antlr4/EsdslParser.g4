@@ -39,6 +39,9 @@ searchparameter
 string
    :ID
    |parameter
+   |TRUE
+   |FALSE
+   |NULL
    ;
 
 
