@@ -11,9 +11,9 @@ import org.antlr.v4.runtime.Token;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author 梁建军
@@ -25,7 +25,7 @@ import java.util.Map;
 public class EsdslResource {
     private final EsdslVisitor esdslVisitor = new EsdslVisitor();
 
-    private final Map<String, EsdslBean> esdslMap = new HashMap<>();
+    private final ConcurrentMap<String, EsdslBean> esdslMap = new ConcurrentHashMap<>();
 
     private EsdslFileResourceHandler esdslFileResourceHandler;
 
@@ -64,10 +64,13 @@ public class EsdslResource {
      * @return bean
      */
     public EsdslBean get(String fileName, String methodName) {
-        return esdslMap.computeIfAbsent(fileName + "#" + methodName, s -> {
-            load(fileName, esdslFileResourceHandler.load(fileName));
-            return esdslMap.get(s);
-        });
+        String key = fileName + "#" + methodName;
+        EsdslBean esdslBean = esdslMap.get(key);
+        if (esdslBean != null) {
+            return esdslBean;
+        }
+        load(fileName, esdslFileResourceHandler.load(fileName));
+        return esdslMap.get(key);
     }
 
     /**
