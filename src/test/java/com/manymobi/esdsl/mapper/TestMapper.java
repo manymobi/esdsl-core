@@ -26,4 +26,7 @@ public interface TestMapper {
     @RequestMapping(method = RequestMethod.GET, value = "/v")
     JSONObject search3(@RequestBody String sssss);
 
+    @RequestMapping(method = RequestMethod.GET, value = "/v-${url}")
+    JSONObject search4(@RequestBody String sssss,@Param("url") String url);
+
 }

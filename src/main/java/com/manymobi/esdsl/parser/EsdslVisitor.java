@@ -15,8 +15,11 @@ import com.manymobi.esdsl.util.Optional;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author 梁建军
@@ -79,19 +82,11 @@ public class EsdslVisitor extends EsdslParserBaseVisitor {
     @Override
     public Object visitPath(EsdslParser.PathContext ctx) {
         ListRunProcess.Build build = new ListRunProcess.Build();
-        final boolean[] start = {true};
         ctx.string()
                 .stream()
                 .map(this::visit)
                 .map(o -> (RunProcess) o)
-                .forEach(runProcess -> {
-                    if (start[0]) {
-                        start[0] = false;
-                    } else {
-                        build.addRunProcess(new StringRunProcess("/"));
-                    }
-                    build.addRunProcess(runProcess);
-                });
+                .forEach(build::addRunProcess);
         return build.build();
     }
 
@@ -142,7 +137,17 @@ public class EsdslVisitor extends EsdslParserBaseVisitor {
 
     @Override
     public Object visitString(EsdslParser.StringContext ctx) {
-        TerminalNode terminalNode = ctx.ID();
+        TerminalNode terminalNode = Stream.of(
+                        ctx.ID(),
+                        ctx.TRUE(),
+                        ctx.FALSE(),
+                        ctx.NULL(),
+                        ctx.ROD(),
+                        ctx.SLASH()
+                )
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
         if (terminalNode != null) {
             return new StringRunProcess.Build()
                     .addString(terminalNode.getText())

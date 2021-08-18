@@ -1,5 +1,5 @@
 ==> search1
-GET index/${fulltext}/_search?pretty
+GET index/${fulltext}/_search?pretty=true
 {
   "query" : {
 	#if(232=="rwerwe")

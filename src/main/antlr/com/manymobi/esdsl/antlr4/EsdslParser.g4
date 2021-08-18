@@ -21,7 +21,7 @@ uri
 
 
 path
-   : string? ('/' string?)*
+   : string*
    ;
 
 query
@@ -42,6 +42,8 @@ string
    |TRUE
    |FALSE
    |NULL
+   |ROD
+   |SLASH
    ;
 
 

@@ -109,4 +109,12 @@ class TestMapperTest {
         assertEquals("{\"ssss\":\"0000000000000\",\"integer\":2}", search.toString());
     }
 
+    @Test
+    public void search4() {
+        TestMapper target = esdsl.target(TestMapper.class);
+        Object search = target.search4("{\"ssss\":\"0000000000000\",\"integer\":2}","url");
+        assertEquals("{\"ssss\":\"0000000000000\",\"integer\":2}", search.toString());
+    }
+
+
 }

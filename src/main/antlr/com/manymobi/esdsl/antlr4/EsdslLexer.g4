@@ -70,6 +70,7 @@ AND_OR_XOR
     |'^'
     ;
 ID  : [a-zA-Z_][a-zA-Z0-9_]* ;
+ROD : '-';
 
 QUESTION_MARK : '?' ;
 
