@@ -84,9 +84,9 @@ STRING
 SINGLE_QUOTATION_MARK : '\'';
 
 PARAMETER
-  :'#{' (ESC | SAFECODEPOINT)* '}'
-  |'${' (ESC | SAFECODEPOINT)* '}'
-  |'@{' (ESC | SAFECODEPOINT)* '}'
+  :'#{' (ESC | SAFECODEPOINT_PARAMETER)* '}'
+  |'${' (ESC | SAFECODEPOINT_PARAMETER)* '}'
+  |'@{' (ESC | SAFECODEPOINT_PARAMETER)* '}'
   ;
 
 fragment ESC
@@ -99,6 +99,9 @@ fragment HEX
    : [0-9a-fA-F]
    ;
 fragment SAFECODEPOINT
+   : ~ ["\\\u0000-\u001F]
+   ;
+fragment SAFECODEPOINT_PARAMETER
    : ~ [}"\\\u0000-\u001F]
    ;
 
