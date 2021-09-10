@@ -78,34 +78,5 @@ Esdsl 框架使得将 Elasticsearch 与面向对象应用程序结合使用变�
     2. Future,CompletableFuture,CompletionStage
     3. 其他对象将使用使用json解析框架解析
 
-# esdsl 文件配色配置
-    在idea设置里面添加一个新的文件类型，点击 “1” 即可打开 2 的设置框,在框中按图设置即可
-    下边Keywords 里面得的内容
-    Keywords 1 中
-    ==>
-
-    Keywords 2 中 
-    #else
-    #elseif
-    #endfor
-    #endif
-    #for
-    #if
-    DELETE
-    GET
-    POST
-    PUT
-    close=
-    in
-    open=
-    separator=
-
-    Keywords 2 中 
-    #
-    $
-![esdsl](images/idea_setting.png)
-# 语法校验
-
-暂时没有开发对应插件，请使用 [Esdsl.g4](./src/main/java/com/manymobi/esdsl/antlr4/Esdsl.g4)配合上ANTLR V4插件校验错误
-[插件github](https://github.com/antlr/intellij-plugin-v4) 
-[jetbrains地址](https://plugins.jetbrains.com/plugin/7358-antlr-v4/)
+# esdsl 语法校验
+    请安装[插件](https://plugins.jetbrains.com/plugin/17572-esdsl)
