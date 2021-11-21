@@ -30,7 +30,7 @@ public class ObjectParamHandler extends ParamHandler<Object> {
     }
 
 
-
+    @Deprecated
     public static class Build extends ParamHandler.Build<ObjectParamHandler> {
 
         @Override

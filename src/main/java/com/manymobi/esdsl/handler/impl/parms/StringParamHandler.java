@@ -14,8 +14,13 @@ import java.util.Map;
  */
 public class StringParamHandler extends ParamHandler<String> {
 
+    @Deprecated
     public StringParamHandler(String paramName, JsonEncoder jsonEncoder) {
         super(paramName, jsonEncoder);
+    }
+
+    public StringParamHandler(String paramName) {
+        super(paramName);
     }
 
     @Override
@@ -23,7 +28,7 @@ public class StringParamHandler extends ParamHandler<String> {
         map.put(paramName, o);
     }
 
-
+    @Deprecated
     public static class Build extends ParamHandler.Build<StringParamHandler> {
 
         @Override

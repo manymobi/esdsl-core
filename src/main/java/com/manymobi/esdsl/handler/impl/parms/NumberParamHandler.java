@@ -11,11 +11,17 @@ import java.util.Map;
  * 创建时间： 下午 2:05
  * @version 1.0
  * @since 1.0
+ * 处理数字类型的参数
  */
 public class NumberParamHandler extends ParamHandler<Number> {
 
+    @Deprecated
     public NumberParamHandler(String paramName, JsonEncoder jsonEncoder) {
         super(paramName, jsonEncoder);
+    }
+
+    public NumberParamHandler(String paramName) {
+        super(paramName);
     }
 
     @Override
@@ -23,7 +29,7 @@ public class NumberParamHandler extends ParamHandler<Number> {
         map.put(paramName, o);
     }
 
-
+    @Deprecated
     public static class Build extends ParamHandler.Build<NumberParamHandler> {
 
         @Override

@@ -25,12 +25,22 @@ public abstract class ParamHandler<T> {
         this.jsonEncoder = jsonEncoder;
     }
 
+    public ParamHandler(String paramName) {
+        this.paramName = paramName;
+        this.jsonEncoder = null;
+    }
+
     /**
      * @param target 目标
      * @param arg    方法的参数
      */
     public abstract void handler(Map<String, Object> target, T arg);
 
+    /**
+     * 使用这种模式不合理,换成工厂模式
+     * 已经使用被 @{@link ParamHandlerFactory} 替代了
+     */
+    @Deprecated
     public static abstract class Build<T extends ParamHandler> {
 
         protected JsonEncoder jsonEncoder;

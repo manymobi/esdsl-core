@@ -9,6 +9,7 @@ import com.manymobi.esdsl.annotations.RequestMethod;
 import com.manymobi.esdsl.handler.JsonEncoder;
 import com.manymobi.esdsl.handler.MethodHandler;
 import com.manymobi.esdsl.handler.ParamHandler;
+import com.manymobi.esdsl.handler.ParamHandlerFactory;
 import com.manymobi.esdsl.handler.ParamsHandler;
 import com.manymobi.esdsl.handler.Request;
 import com.manymobi.esdsl.handler.RequestHandler;
@@ -66,7 +67,7 @@ public class DefaultMethodHandler implements MethodHandler {
         jsonEncoder = build.jsonEncoder;
         restHandler = new LogRestHandler(build.restHandler, logger);
         requestHandler = build.requestHandler;
-        ParamHandler.Build[] paramHandlers = build.paramHandlers;
+        ParamHandlerFactory[] paramHandlers = build.paramHandlerFactories;
         Method method = build.method;
 
         boolean dynamicRequestBody = false;
@@ -81,7 +82,7 @@ public class DefaultMethodHandler implements MethodHandler {
 
             Class<?> parameterType = parameterTypes[i];
 
-            ParamHandler.Build paramHandlerBuild = Arrays.stream(paramHandlers)
+            ParamHandlerFactory paramHandlerFactory = Arrays.stream(paramHandlers)
                     .filter(paramHandler1 -> paramHandler1.can(parameterType))
                     .findFirst()
                     .get();
@@ -89,10 +90,10 @@ public class DefaultMethodHandler implements MethodHandler {
             for (Annotation annotation1 : parameterAnnotation) {
                 if (annotation1 instanceof RequestBody) {
                     dynamicRequestBody = true;
-                    paramHandler = paramHandlerBuild.build("requestBody");
+                    paramHandler = paramHandlerFactory.apply("requestBody");
                 } else if (annotation1 instanceof Param) {
                     Param param = (Param) annotation1;
-                    paramHandler = paramHandlerBuild.build(param.value());
+                    paramHandler = paramHandlerFactory.apply(param.value());
                 }
             }
             paramHandlerList.add(paramHandler);
@@ -186,7 +187,7 @@ public class DefaultMethodHandler implements MethodHandler {
         private Mapper mapper;
         private JsonEncoder jsonEncoder;
         private VariableHandler variableHandler;
-        private ParamHandler.Build[] paramHandlers;
+        private ParamHandlerFactory[] paramHandlerFactories;
         private RequestHandler[] requestHandler;
         private ResponseBodyHandler[] responseBodyHandler;
         private ResponseContextHandler[] responseContextHandler;
@@ -211,7 +212,7 @@ public class DefaultMethodHandler implements MethodHandler {
             return this;
         }
 
-        public Build setJsonHandler(JsonEncoder jsonEncoder) {
+        public Build setJsonEncoder(JsonEncoder jsonEncoder) {
             this.jsonEncoder = jsonEncoder;
             return this;
         }
@@ -221,8 +222,8 @@ public class DefaultMethodHandler implements MethodHandler {
             return this;
         }
 
-        public Build setParamHandlers(ParamHandler.Build[] paramHandlers) {
-            this.paramHandlers = paramHandlers;
+        public Build setParamHandlerFactories(ParamHandlerFactory[] paramHandlerFactories) {
+            this.paramHandlerFactories = paramHandlerFactories;
             return this;
         }
 

@@ -5,6 +5,7 @@ import com.manymobi.esdsl.handler.EsdslFileResourceHandler;
 import com.manymobi.esdsl.handler.JsonEncoder;
 import com.manymobi.esdsl.handler.MethodHandler;
 import com.manymobi.esdsl.handler.ParamHandler;
+import com.manymobi.esdsl.handler.ParamHandlerFactory;
 import com.manymobi.esdsl.handler.RequestHandler;
 import com.manymobi.esdsl.handler.ResponseBodyHandler;
 import com.manymobi.esdsl.handler.ResponseContextHandler;
@@ -15,9 +16,10 @@ import com.manymobi.esdsl.handler.impl.DefaultRestHandler;
 import com.manymobi.esdsl.handler.impl.DefaultVariableHandler;
 import com.manymobi.esdsl.handler.impl.EsdslInvocationHandler;
 import com.manymobi.esdsl.handler.impl.FaultTolerantRequestHandler;
-import com.manymobi.esdsl.handler.impl.parms.NumberParamHandler;
-import com.manymobi.esdsl.handler.impl.parms.ObjectParamHandler;
-import com.manymobi.esdsl.handler.impl.parms.StringParamHandler;
+import com.manymobi.esdsl.handler.impl.parms.CompatibleParamHandlerFactory;
+import com.manymobi.esdsl.handler.impl.parms.NumberParamHandlerFactory;
+import com.manymobi.esdsl.handler.impl.parms.ObjectParamHandlerFactory;
+import com.manymobi.esdsl.handler.impl.parms.StringParamHandlerFactory;
 import com.manymobi.esdsl.handler.impl.response.FutureResponseBodyHandler;
 import com.manymobi.esdsl.handler.impl.response.ObjectResponseBodyHandler;
 import com.manymobi.esdsl.handler.impl.response.ObjectResponseContextHandler;
@@ -67,7 +69,7 @@ public class Esdsl implements AutoCloseable {
     /**
      * 不同类型参数不同处理
      */
-    private final ParamHandler.Build[] paramHandlers;
+    private final ParamHandlerFactory[] paramHandlerFactories;
     /**
      * 发送前处理对请求处理
      * 生成的json 默认会有多余的 "," 使用@{@link FaultTolerantRequestHandler} 去掉了
@@ -94,9 +96,11 @@ public class Esdsl implements AutoCloseable {
         for (ResponseContextHandler responseContextHandler : this.responseContextHandlers) {
             responseContextHandler.setJsonEncoder(jsonEncoder);
         }
-        this.paramHandlers = build.paramHandlers.toArray(new ParamHandler.Build[0]);
-        for (ParamHandler.Build paramHandler : this.paramHandlers) {
-            paramHandler.setJsonHandler(jsonEncoder);
+        this.paramHandlerFactories = build.paramHandlerFactories.toArray(new ParamHandlerFactory[0]);
+        for (ParamHandlerFactory paramHandler : this.paramHandlerFactories) {
+            if (paramHandler instanceof JsonEncoder.Set) {
+                ((JsonEncoder.Set) paramHandler).setJsonEncoder(jsonEncoder);
+            }
         }
         esdslResource = new EsdslResource(build.esdslFileResourceHandler);
     }
@@ -117,13 +121,16 @@ public class Esdsl implements AutoCloseable {
         return variableHandler;
     }
 
+    @Deprecated
     public ParamHandler.Build[] getParamHandlers() {
-        return paramHandlers;
+        throw new RuntimeException("无法继续支持了");
     }
 
+    @Deprecated
     public RequestHandler[] getRequestJsonHandlers() {
         return requestHandlers;
     }
+
 
     public <T> T target(Class<T> tClass) {
         return (T) objectMap.computeIfAbsent(tClass, aClass -> target0(tClass));
@@ -142,9 +149,9 @@ public class Esdsl implements AutoCloseable {
                                 .setMapper(mapper)
                                 .setEsdslResource(esdslResource)
                                 .setRestHandler(restHandler)
-                                .setJsonHandler(jsonEncoder)
+                                .setJsonEncoder(jsonEncoder)
                                 .setVariableHandler(variableHandler)
-                                .setParamHandlers(paramHandlers)
+                                .setParamHandlerFactories(paramHandlerFactories)
                                 .setRequestJsonHandler(requestHandlers)
                                 .setResponseBodyHandler(responseBodyHandlers)
                                 .setResponseContextHandler(responseContextHandlers)
@@ -188,10 +195,10 @@ public class Esdsl implements AutoCloseable {
                 Collections.singletonList(new FaultTolerantRequestHandler())
         );
 
-        private List<ParamHandler.Build> paramHandlers = Arrays.asList(
-                new NumberParamHandler.Build(),
-                new StringParamHandler.Build(),
-                new ObjectParamHandler.Build()
+        private List<ParamHandlerFactory> paramHandlerFactories = Arrays.asList(
+                new NumberParamHandlerFactory(),
+                new StringParamHandlerFactory(),
+                new ObjectParamHandlerFactory()
         );
 
 
@@ -215,9 +222,16 @@ public class Esdsl implements AutoCloseable {
             return this;
         }
 
+        @Deprecated
         public Build setParamHandlers(List<ParamHandler.Build> paramHandlers) {
-            this.paramHandlers = paramHandlers;
+            this.paramHandlerFactories = paramHandlers.stream()
+                    .map(CompatibleParamHandlerFactory::new)
+                    .collect(Collectors.toList());
             return this;
+        }
+
+        public void setParamHandlerFactories(List<ParamHandlerFactory> paramHandlerFactories) {
+            this.paramHandlerFactories = paramHandlerFactories;
         }
 
         public Build setRestClient(RestClient restClient) {
