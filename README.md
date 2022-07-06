@@ -79,4 +79,4 @@ Esdsl 框架使得将 Elasticsearch 与面向对象应用程序结合使用变�
     3. 其他对象将使用使用json解析框架解析
 
 # esdsl 语法校验
-[插件](https://plugins.jetbrains.com/plugin/17572-esdsl)
+[插件](https://plugins.jetbrains.com/plugin/19482-esdsl)
